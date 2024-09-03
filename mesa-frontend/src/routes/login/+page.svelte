@@ -54,8 +54,7 @@ const loginTrigger = async () =>{
 
 	<a
 		on:click={loginTrigger}
-		href="/login"
-		class="text-center text-neutral-50 bg-neutral-900 w-32 py-2 px-6 rounded-full mb-4"
+		class="text-center text-neutral-50 bg-neutral-900 w-32 py-2 px-6 rounded-full mb-4 cursor-pointer"
 		>Login</a
 	>
 	<a href="/" class="text-sm hover:underline text-neutral-500 cursor-pointer">Tela inicial</a>

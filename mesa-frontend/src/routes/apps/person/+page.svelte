@@ -60,14 +60,14 @@
 		}
 	};
 
-	const editPerson = (p: INewPerson, id: string) => {
+	const editPerson = (p:any) => {
 		windows["editaPessoa"].closed = false;
 		edit_full_name = p.full_name;
 		edit_cpf = p.cpf;
-		edit_address = p.address;
-		edit_address_number = p.address_number;
-		edit_address_city = p.address_city;
-		edit_address_cep = p.address_cep;
+		edit_address = p.address.street;
+		edit_address_number = p.address.number;
+		edit_address_city = p.address.city;
+		edit_address_cep = p.address.cep;
 		edit_phone = p.phone;
 		edit_email = p.email;
 		edit_date_of_birth = p.date_of_birth;

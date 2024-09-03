@@ -12,8 +12,8 @@ export class PersonService{
                 'Authorization': `Bearer ${Cookies.get('token')}`
             }
         })
+        console.log(result.data)
         if (result.status == 200){
-            console.log(result.data)
             return result.data
         }
         return null
