@@ -9,3 +9,7 @@ export default interface INewPerson {
     email: string;
     date_of_birth: string;
 }
+
+export interface IEditPerson extends INewPerson {
+    id: string;
+}

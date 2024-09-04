@@ -3,6 +3,11 @@
 
 	export let data;
 
+	let exibitionNames = {
+		auth: "Usuários do domínio",
+		person: "Pessoas"
+	}
+
 	let services = data.services;
 	// if (!data.tenantId || !data.token) {
 	// 	goto("/login");
@@ -15,8 +20,8 @@
 		{#each services as s}
 			<button
 				on:click={() => goto(`/apps/${s["service_name"]}`)}
-				class=" hover:scale-105 cursor-pointer flex items-center justify-center border-2 border-slate-300 text-slate-800 select-none h-16 w-48 rounded text-xl"
-				>{s["service_name"]}</button
+				class=" hover:scale-105 cursor-pointer flex items-center justify-center border border-slate-300 text-slate-800 select-none h-24 w-48 font-thin text-xl"
+				>{exibitionNames[s["service_name"]]}</button
 			>
 		{/each}
 	</div>

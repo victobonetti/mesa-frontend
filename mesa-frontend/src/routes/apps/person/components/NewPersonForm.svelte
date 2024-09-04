@@ -12,6 +12,7 @@
 	export let email = '';
 	export let date_of_birth = '';
 	
+	export let type = '';
 	export let minimize;
 	export let close;
 	export let create;
@@ -26,9 +27,16 @@
 		<div
 			class="border-b border-neutral-300 pb-1 mb-2 w-full flex justify-between items-center"
 		>
+		{#if type =="create"}
 			<h1 class="w-1/2 select-none text-neutral-600 min-w-96">
 				Novo cadastro
 			</h1>
+		{/if}
+		{#if type =="update"}
+		<h1 class="w-1/2 select-none text-neutral-600 min-w-96">
+			Edição de cadastro
+		</h1>
+		{/if}
 			<div class=" flex w-1/2 items-center justify-center font-thin">
 				<p
 					on:click={minimize}
@@ -45,6 +53,9 @@
 			</div>
 		</div>
 
+		{#if type =="update"}
+		
+		{/if}
 		<Input id="full_name" label="Nome"        bind:val={full_name} />
 		<Input id="cpf" label="CPF" 		      bind:val={cpf} />
 		<Input id="address" label="Endereço" 	  bind:val={address} />
@@ -81,10 +92,21 @@
 		</div>
 	</div>
 	<div class="w-full flex justify-end pr-4">
-		<button
+		{#if type =="create"}
+			<button
 			on:click={create}
 			class=" mb-3 rounded text-sm py-2 px-4 border-green-200 shadow-inner bg-green-400 text-green-900"
 			>Criar</button
 		>
+		{/if}
+
+		{#if type =="update"}
+		<button
+		on:click={create}
+		class=" mb-3 rounded text-sm py-2 px-4 border-green-200 shadow-inner bg-yellow-400 text-yellow-900"
+		>Editar</button
+	>
+	{/if}
+
 	</div>
 </div>

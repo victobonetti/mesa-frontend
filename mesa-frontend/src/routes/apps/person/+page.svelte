@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { IEditPerson } from "../../../services/person/INewPerson";
 	import type INewPerson from "../../../services/person/INewPerson";
 	import { PersonService } from "../../../services/person/personService";
 	import NewPersonForm from "./components/NewPersonForm.svelte";
@@ -30,6 +31,7 @@
 	let date_of_birth = "";
 
 	// Form data edit
+	let edit_id = "";
 	let edit_full_name = "";
 	let edit_cpf = "";
 	let edit_address = "";
@@ -42,7 +44,7 @@
 
 	const createPerson = async () => {
 		const personData: INewPerson = {
-			full_name: full_name,
+			full_name,
 			cpf,
 			address,
 			address_number,
@@ -50,18 +52,40 @@
 			address_cep,
 			phone,
 			email,
-			date_of_birth: date_of_birth,
+			date_of_birth,
 		};
 
 		let result = await PersonService.createPerson(personData);
 		if (result != null) {
-			alert("Usuário criado.");
 			persons = await PersonService.findPersons();
+			closeWindow("novaPessoa")
 		}
 	};
 
-	const editPerson = (p:any) => {
+	const editPerson = async () => {
+		const personData: IEditPerson = {
+			id: edit_id,
+			full_name: edit_full_name,
+			cpf: edit_cpf,
+			address: edit_address,
+			address_number: edit_address_number,
+			address_city: edit_address_city,
+			address_cep: edit_address_cep,
+			phone: edit_phone,
+			email: edit_email,
+			date_of_birth: edit_date_of_birth
+		};
+
+		let result = await PersonService.editPerson(personData);
+		if (result != null) {
+			persons = await PersonService.findPersons();
+			closeWindow("editaPessoa")
+		}
+	};
+
+	const editPersonModalActive = (p:any) => {
 		windows["editaPessoa"].closed = false;
+		edit_id = p.id
 		edit_full_name = p.full_name;
 		edit_cpf = p.cpf;
 		edit_address = p.address.street;
@@ -99,6 +123,20 @@
 			date_of_birth = "";
 			windows["novaPessoa"].closed = true;
 		}
+
+		if (windowName == "editaPessoa") {
+			edit_id = "";
+			edit_full_name = "";
+			edit_cpf = "";
+			edit_address = "";
+			edit_address_number = "";
+			edit_address_city = "";
+			edit_address_cep = "";
+			edit_phone = "";
+			edit_email = "";
+			edit_date_of_birth = "";
+			windows["editaPessoa"].closed = true;
+		}
 	};
 </script>
 
@@ -107,7 +145,7 @@
 		<div class="mb-4">
 			<h1 class="select-none text-2xl mb-2">Pessoas cadastradas</h1>
 			<p class=" select-none text-xs text-left text-neutral-600">
-				Crie usuarios. Clique nas tabela para visualizar individualmente e editar. 
+				Crie pessoas. Clique nas tabela para visualizar individualmente e editar. 
 			</p>
 		</div>
 		<div>
@@ -159,7 +197,7 @@
 			<tbody class="bg-white">
 				{#each persons as p}
 					<tr
-						on:click={() => editPerson(p)}
+						on:click={() => editPersonModalActive(p)}
 						class="select-none bg-transparent hover:bg-neutral-100"
 					>
 						<td class="px-2 text-xs py-1 border-b border-gray-200"
@@ -223,6 +261,7 @@
 			bind:date_of_birth
 			minimize={() => (windows["novaPessoa"].minimized = true)}
 			close={() => closeWindow("novaPessoa")}
+			type="create"
 			create={createPerson}
 		/>
 	{/if}
@@ -240,7 +279,8 @@
 			bind:date_of_birth={edit_date_of_birth}
 			minimize={() => (windows["editaPessoa"].minimized = true)}
 			close={() => closeWindow("editaPessoa")}
-			create={createPerson}
+			type="update"
+			create={editPerson}
 		/>
 	{/if}
 </div>
