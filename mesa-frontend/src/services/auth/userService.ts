@@ -16,4 +16,17 @@ export class UserService {
         }
         return null
     }
+
+    static async removeUser(user_id:string) {
+        let result = await axios.delete(`${api_users}?user_id=${user_id}`, {
+            headers: {
+                'X-Tenant-ID': Cookies.get('tenantid'),
+                'Authorization': `Bearer ${Cookies.get('token')}`
+            }
+        })
+        if (result.status == 200) {
+            return result.data
+        }
+        return null
+    }
 }

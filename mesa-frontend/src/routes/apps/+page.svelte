@@ -1,12 +1,8 @@
 <script lang="ts">
     import { goto } from '$app/navigation';
+    import { getExibitionName } from '../../services/exibitionNames.js';
 
 	export let data;
-
-	let exibitionNames = {
-		auth: "Usuários do domínio",
-		person: "Pessoas"
-	}
 
 	let services = data.services;
 	// if (!data.tenantId || !data.token) {
@@ -21,7 +17,7 @@
 			<button
 				on:click={() => goto(`/apps/${s["service_name"]}`)}
 				class=" hover:scale-105 cursor-pointer flex items-center justify-center border border-slate-300 text-slate-800 select-none h-24 w-48 font-thin text-xl"
-				>{exibitionNames[s["service_name"]]}</button
+				>{getExibitionName(s["service_name"])}</button
 			>
 		{/each}
 	</div>

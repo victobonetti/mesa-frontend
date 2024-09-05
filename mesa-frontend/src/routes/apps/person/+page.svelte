@@ -83,6 +83,15 @@
 		}
 	};
 
+	const deletePerson = async () => {
+		console.log(edit_id)
+		let result = await PersonService.deletePerson(edit_id);
+		if (result != null) {
+			persons = await PersonService.findPersons();
+			closeWindow("editaPessoa")
+		}
+	};
+
 	const editPersonModalActive = (p:any) => {
 		windows["editaPessoa"].closed = false;
 		edit_id = p.id
@@ -281,6 +290,7 @@
 			close={() => closeWindow("editaPessoa")}
 			type="update"
 			create={editPerson}
+			deletes={deletePerson}
 		/>
 	{/if}
 </div>

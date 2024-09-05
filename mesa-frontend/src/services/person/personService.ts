@@ -6,6 +6,20 @@ import type { IEditPerson } from "./INewPerson";
 let api_person = 'http://192.168.90.90/api/person/'
 
 export class PersonService {
+    static async deletePerson(edit_id: string) {
+        let result = await axios.delete(`${api_person}?id=${edit_id}`, {
+            headers: {
+                'X-Tenant-ID': Cookies.get('tenantid'),
+                'Authorization': `Bearer ${Cookies.get('token')}`
+            }
+        })
+        console.log(result.request)
+        if (result.status == 200) {
+            return result.data
+        }
+        return null
+    }
+
     static async editPerson(personData: IEditPerson) {
         let result = await axios.put(api_person, {
             "person_id": personData.id,

@@ -1,7 +1,12 @@
 <script lang="ts">
+	import { GrantsService } from "../../../services/auth/grantsService.js";
+    import { UserService } from "../../../services/auth/userService.js";
+	import { getExibitionName } from "../../../services/exibitionNames.js";
+
 	export let data;
 	let users = data.users;
 	let persons = data.persons;
+	let services = data.services;
 
 	const findUserName = (email: string) => {
 		let userName = "Usuário sem dados";
@@ -12,6 +17,88 @@
 		}
 		return userName;
 	};
+
+	let selected_user_id = "";
+	let grant_opts: any[] = [];
+
+	let grantsWindowActive = false;
+
+	const getServicesObject = (grants: any[]) => {
+		let temp_map = [];
+		for (let service of services) {
+			let grant_level = 0;
+			let grant_id = "";
+			for (let grant of grants) {
+				console.log(service);
+				if (grant["service_name"] == service["service_name"]) {
+					grant_level = grant["grant_level"];
+					grant_id = grant["id"];
+				}
+			}
+			let service_exibition_name = getExibitionName(
+				service["service_name"],
+			);
+			temp_map.push({
+				service: service["service_name"],
+				service_exibition_name,
+				grant_level,
+				grant_id,
+			});
+		}
+		console.log(temp_map);
+		return temp_map;
+	};
+
+	const grantsMap = async () => {
+		let grants = await GrantsService.findGrants(selected_user_id);
+		grant_opts = getServicesObject(grants);
+	};
+
+	const openGrantsWindow = (user_id: string) => {
+		grantsWindowActive = true;
+		selected_user_id = user_id;
+		grantsMap();
+	};
+
+	async function change_grant(
+		e: MouseEvent,
+		grant_level: number,
+		actual_state: boolean,
+		grant_id: string,
+		service: string,
+	) {
+		e.preventDefault();
+		let result;
+
+		if (actual_state == false) {
+			result = await GrantsService.addGrant(
+				selected_user_id,
+				grant_level,
+				service,
+			);
+		}
+
+		if (actual_state == true && grant_id != "") {
+			result = await GrantsService.removeGrant(grant_id);
+		}
+
+		grantsMap();
+
+		if (result == null) {
+			alert("Erro ao alterar permissões");
+		}
+	}
+
+
+    async function deleteUser(user_id: string) {
+		let result = UserService.removeUser(user_id)
+		if(result == null){
+			alert("Erro ao excluir usuário")
+		} else {
+			users = UserService.findUsers()
+		}
+    }
+
 </script>
 
 <div class="w-screen h-screen p-12">
@@ -25,68 +112,122 @@
 	<div class=" w-full border-t pt-6 flex-wrap gap-4 flex">
 		<div class=" flex flex-col items-center">
 			{#each users as u}
-				<div class=" p-2 mb-2 border-b pb-2 flex w-96">
-					<div class=" w-48">
+				<div
+					class="{selected_user_id != u['id']
+						? `border-b`
+						: `border-2 border-gray-500 rounded`} p-2 mb-2 pb-2 flex w-96"
+				>
+					<div class=" w-56">
 						<h3 class=" font-medium">{findUserName(u["email"])}</h3>
 						<h4 class="ml-0.5 text-sm text-neutral-600">
 							{u["email"]}
 						</h4>
 					</div>
 					<div class=" pl-12 flex justify-center items-center">
-						<button
-							class=" shadow-inner bg-neutral-900 hover:bg-neutral-800 text-neutral-100 rounded-full text-xs w-32 px-4 py-2"
-							>Gerenciar permissões</button
-						>
+						<div>
+							{#if selected_user_id != u["id"]}
+								<button
+									on:click={() => openGrantsWindow(u["id"])}
+									class=" shadow-inner bg-neutral-900 hover:bg-neutral-800 text-neutral-100 rounded-full text-xs w-36 px-4 py-2"
+									>Permissões</button
+								>
+							{/if}
+							<button on:click={() => deleteUser(u["id"])} class=" mt-2 shadow-inner bg-red-900 hover:bg-red-800 text-red-100 rounded-full text-xs w-36 px-4 py-2">Remover usuário</button>
+						</div>
 					</div>
 				</div>
 			{/each}
 		</div>
-		<div
-			class=" pt-3 px-4 shadow-sm ml-12 border rounded w-1/2 min-w-96 bg-neutral-50"
-		>
-			<h2 class=" select-none pb-1 font-semibold border-b">
-				Permissões do usuário
-			</h2>
-			<div class="p-2">
-				<div class=" border-b mb-2">
-					<h3 class=" text-sm font-light select-none">Super Admin</h3>
-					<div class="flex flex-col mb-2 mt-1">
-						<div class="flex">
-							<input id="read" type="checkbox" />
-							<label class="text-xs ml-0.5 flex" for="read"
-								>Habilitado
-								<p class="text-red-500">*</p></label
-							>
+		{#if grantsWindowActive}
+			<div
+				class=" pt-3 px-4 shadow-sm ml-12 border-2 border-gray-500 rounded w-1/2 min-w-96 bg-neutral-50"
+			>
+				<h2 class=" select-none pb-1 font-semibold border-b">
+					Permissões do usuário
+				</h2>
+				<div class="p-2">
+					<div class=" border-b mb-2">
+						<h3 class=" text-sm font-light select-none">
+							Super Admin
+						</h3>
+						<div class="flex flex-col mb-2 mt-1">
+							<div class="flex">
+								<input id="read" type="checkbox" />
+								<label class="text-xs ml-0.5 flex" for="read"
+									>Habilitado
+									<p class="text-xs text-red-500">*</p></label
+								>
+							</div>
+							<p class="text-red-500 text-xs">
+								* Todas as permissões habilitadas
+							</p>
 						</div>
-						<p class="text-red-500 text-xs">
-							* Todas as permissões habilitadas
-						</p>
 					</div>
-				</div>
-				<div>
-					<h3 class=" text-sm font-light select-none">Usuários do domínio</h3>
-					<div class="flex mt-1">
-						<div>
-							<input id="read" type="checkbox" />
-							<label class="text-xs ml-0.5" for="read"
-								>Leitura</label
-							>
-						</div>
-						<div class="ml-4">
-							<input id="write" type="checkbox" />
-							<label class="text-xs ml-0.5" for="write"
-								>Escrita</label
-							>
-						</div>
-						<div class="ml-4">
-							<input id="admin" type="checkbox" />
-							<label class="text-xs ml-0.5" for="admin"
-								>Admin</label
-							>
-						</div>
+					<div>
+						{#each grant_opts as g}
+							<h3 class=" mt-2 text-sm font-light select-none">
+								{g["service_exibition_name"]}
+							</h3>
+							<div class="flex mt-1">
+								<div>
+									<input
+										id="read"
+										type="checkbox"
+										checked={g["grant_level"] == 4}
+										on:click={(e) =>
+											change_grant(
+												e,
+												4,
+												g["grant_level"] == 4,
+												g["grant_id"],
+												g["service"],
+											)}
+									/>
+									<label class="text-xs ml-0.5" for="read"
+										>Leitura</label
+									>
+								</div>
+								<div class="ml-4">
+									<input
+										id="write"
+										type="checkbox"
+										checked={g["grant_level"] == 5}
+										on:click={(e) =>
+											change_grant(
+												e,
+												5,
+												g["grant_level"] == 5,
+												g["grant_id"],
+												g["service"],
+											)}
+									/>
+									<label class="text-xs ml-0.5" for="write"
+										>Escrita</label
+									>
+								</div>
+								<div class="ml-4">
+									<input
+										id="admin"
+										type="checkbox"
+										checked={g["grant_level"] == 7}
+										on:click={(e) =>
+											change_grant(
+												e,
+												7,
+												g["grant_level"] == 7,
+												g["grant_id"],
+												g["service"],
+											)}
+									/>
+									<label class="text-xs ml-0.5" for="admin"
+										>Gerenciar</label
+									>
+								</div>
+							</div>
+						{/each}
 					</div>
 				</div>
 			</div>
-		</div>
+		{/if}
 	</div>
 </div>
