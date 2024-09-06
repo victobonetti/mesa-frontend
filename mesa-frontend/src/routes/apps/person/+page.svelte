@@ -272,6 +272,7 @@
 			close={() => closeWindow("novaPessoa")}
 			type="create"
 			create={createPerson}
+			deletes={deletePerson}
 		/>
 	{/if}
 
