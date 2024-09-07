@@ -1,7 +1,5 @@
 <script context="module">
     import { page } from "$app/stores";
-
-
 </script>
 
 {#if $page.url.pathname !== "/apps"}

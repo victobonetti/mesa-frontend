@@ -1,15 +1,16 @@
 <script lang="ts">
-    import { getContext } from "svelte";
-    import type { IEditPerson } from "../../../services/person/INewPerson";
+	import { getContext } from "svelte";
+	import type { IEditPerson } from "../../../services/person/INewPerson";
 	import type INewPerson from "../../../services/person/INewPerson";
 	import { PersonService } from "../../../services/person/personService";
 	import NewPersonForm from "./components/NewPersonForm.svelte";
+	import { ServiceRequest } from "../../../services/serviceRequest";
+	import { handleResponse } from "../../../services/handleResponse";
 
-	const { throwError } = getContext('notify')
+	const { throwError, showSuccess } = getContext("notify");
 
 	// exports
 	export let data;
-	export let throwError;
 	let persons = data.persons;
 
 	// Active windows state
@@ -47,6 +48,15 @@
 	let edit_email = "";
 	let edit_date_of_birth = "";
 
+	const refreshPersons = async (refreshWindow: string) => {
+		let reqPersons = await ServiceRequest.call(() =>
+			PersonService.findPersons(),
+		);
+		handleResponse(reqPersons, throwError);
+		closeWindow(refreshWindow);
+		persons = reqPersons.result;
+	};
+
 	const createPerson = async () => {
 		const personData: INewPerson = {
 			full_name,
@@ -60,10 +70,12 @@
 			date_of_birth,
 		};
 
-		let result = await PersonService.createPerson(personData);
-		if (result != null) {
-			persons = await PersonService.findPersons();
-			closeWindow("novaPessoa")
+		let reqCreatePerson = await ServiceRequest.call(() =>
+			PersonService.createPerson(personData),
+		);
+		let errCreatePerson = handleResponse(reqCreatePerson, throwError);
+		if (!errCreatePerson) {
+			refreshPersons("novaPessoa");
 		}
 	};
 
@@ -78,28 +90,32 @@
 			address_cep: edit_address_cep,
 			phone: edit_phone,
 			email: edit_email,
-			date_of_birth: edit_date_of_birth
+			date_of_birth: edit_date_of_birth,
 		};
 
-		let result = await PersonService.editPerson(personData);
-		if (result != null) {
-			persons = await PersonService.findPersons();
-			closeWindow("editaPessoa")
+		let result = await ServiceRequest.call(() =>
+			PersonService.editPerson(personData),
+		);
+		let err = handleResponse(result, throwError);
+		if (!err) {
+			refreshPersons("editaPessoa");
 		}
 	};
 
 	const deletePerson = async () => {
-		console.log(edit_id)
-		let result = await PersonService.deletePerson(edit_id);
-		if (result != null) {
-			persons = await PersonService.findPersons();
-			closeWindow("editaPessoa")
+		console.log(edit_id);
+		let result = await ServiceRequest.call(() =>
+			PersonService.deletePerson(edit_id),
+		);
+		let err = handleResponse(result, throwError);
+		if (!err) {
+			refreshPersons("editaPessoa");
 		}
 	};
 
-	const editPersonModalActive = (p:any) => {
+	const editPersonModalActive = (p: any) => {
 		windows["editaPessoa"].closed = false;
-		edit_id = p.id
+		edit_id = p.id;
 		edit_full_name = p.full_name;
 		edit_cpf = p.cpf;
 		edit_address = p.address.street;
@@ -146,7 +162,8 @@
 		<div class="mb-4">
 			<h1 class="select-none text-2xl mb-2">Pessoas cadastradas</h1>
 			<p class=" select-none text-xs text-left text-neutral-600">
-				Crie pessoas. Clique nas tabela para visualizar individualmente e editar. 
+				Crie pessoas. Clique nas tabela para visualizar individualmente
+				e editar.
 			</p>
 		</div>
 		<div>

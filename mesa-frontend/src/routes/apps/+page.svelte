@@ -3,7 +3,6 @@
     import { getExibitionName } from '../../services/exibitionNames.js';
 
 	export let data;
-	export let throwError;
 
 	let services = data.services;
 	if (!data.tenantId || !data.token) {

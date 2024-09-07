@@ -9,9 +9,9 @@ export const load = async () => {
     let persons = await ServiceRequest.call(() => PersonService.findPersons())
     let services = await ServiceRequest.call(() => AppsService.findServices())
     return {
-        services: services,
-        persons: persons,
-        users: users,
+        services: services.result,
+        persons: persons.result,
+        users: users.result,
         tenantId: Cookies.get('tenantid'),
         token: Cookies.get('token')
     }

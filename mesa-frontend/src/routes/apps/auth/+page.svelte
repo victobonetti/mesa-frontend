@@ -6,11 +6,12 @@
 	import { getExibitionName } from "../../../services/exibitionNames.js";
 	import { PersonService } from "../../../services/person/personService";
 	import { ServiceRequest } from "../../../services/serviceRequest";
-    import { getContext } from "svelte";
+	import { getContext } from "svelte";
+	import { handleResponse } from "../../../services/handleResponse";
 
 	// exports
 	export let data;
-	const { throwError } = getContext('notify')
+	const { throwError, showSuccess } = getContext("notify");
 	let users = data.users;
 	let persons = data.persons;
 	let services = data.services;
@@ -27,7 +28,7 @@
 
 	const findUserName = (email: string) => {
 		let userName = "Usuário sem dados";
-		for (let p of persons) {
+		for (let p of persons.result) {
 			if (p["email"] == email) {
 				userName = p["full_name"];
 			}
@@ -40,13 +41,23 @@
 		let result = await ServiceRequest.call(() =>
 			UserService.createNewUser(email, pass, isAdmin),
 		);
-		if (result == null) {
-			throwError();
-		} else {
-			users = await ServiceRequest.call(() => UserService.findUsers());
-			persons = await ServiceRequest.call(() =>
+		let err = handleResponse(result, throwError);
+		if (!err) {
+			let reqUsers = await ServiceRequest.call(() =>
+				UserService.findUsers(),
+			);
+			let usersErr = handleResponse(reqUsers, throwError);
+			if (!usersErr) {
+				users = reqUsers.result;
+			}
+
+			let reqPersons = await ServiceRequest.call(() =>
 				PersonService.findPersons(),
 			);
+			let personErr = handleResponse(reqPersons, throwError);
+			if (!personErr) {
+				persons = reqPersons.result;
+			}
 		}
 		email = "";
 		pass = "";
@@ -55,7 +66,7 @@
 
 	const getServicesObject = (grants: any[]) => {
 		let temp_map = [];
-		for (let service of services) {
+		for (let service of services.result) {
 			let grant_level = 0;
 			let grant_id = "";
 			for (let grant of grants) {
@@ -81,17 +92,20 @@
 
 	const grantsMap = async () => {
 		isSuperAdmin = false;
-		let grants = await ServiceRequest.call(() =>
+		let reqGrants = await ServiceRequest.call(() =>
 			GrantsService.findGrants(selected_user_id),
 		);
-		if (!grants) {
-			throwError();
+		let err = handleResponse(reqGrants, throwError);
+		if (!err) {
+			if (
+				reqGrants.result.length > 0 &&
+				reqGrants.result[0]["service_name"] == "*"
+			) {
+				isSuperAdmin = true;
+			}
+			grant_opts = getServicesObject(reqGrants.result);
+			grantsWindowActive = true;
 		}
-		if (grants.length > 0 && grants[0]["service_name"] == "*") {
-			isSuperAdmin = true;
-		}
-		grant_opts = getServicesObject(grants);
-		grantsWindowActive = true;
 	};
 
 	const openGrantsWindow = (user_id: string) => {
@@ -108,22 +122,24 @@
 		service: string,
 	) => {
 		e.preventDefault();
-		let result;
+
+		let errServices;
+		let errGrants;
 
 		if (actual_state == false) {
-			result = await ServiceRequest.call(() =>
+			let reqServices = await ServiceRequest.call(() =>
 				GrantsService.addGrant(selected_user_id, grant_level, service),
 			);
+			errServices = handleResponse(reqServices, throwError);
 		}
 
 		if (actual_state == true && grant_id != "") {
-			result = await GrantsService.removeGrant(grant_id);
+			let reqGrants = await GrantsService.removeGrant(grant_id);
+			errGrants = handleResponse(reqGrants, throwError);
 		}
 
-		grantsMap();
-
-		if (result == null) {
-			alert("Erro ao alterar permissões");
+		if (!errGrants && !errServices) {
+			grantsMap();
 		}
 	};
 
@@ -131,10 +147,12 @@
 		let result = await ServiceRequest.call(() =>
 			UserService.removeUser(user_id),
 		);
-		if (result == null) {
-			alert("Erro ao excluir usuário");
+		handleResponse(result, throwError);
+		let usersReq = await ServiceRequest.call(() => UserService.findUsers());
+		let err = handleResponse(usersReq, throwError);
+		if (!err) {
+			users = usersReq.result;
 		}
-		users = await UserService.findUsers();
 	};
 </script>
 
@@ -158,11 +176,11 @@
 	</div>
 	<div class=" w-full border-t pt-6 flex-wrap gap-4 flex">
 		<div class=" flex flex-col items-center">
-			{#each users as u}
+			{#each users.result as u}
 				<div
 					class="{selected_user_id != u['id']
 						? `border-b`
-						: `border-2 border-gray-500 rounded`} p-2 mb-2 pb-2 flex w-96"
+						: `border-2 border-gray-500 rounded`} p-2 mb-2 pb-2 flex"
 				>
 					<div class=" w-56">
 						<h3 class=" font-medium">{findUserName(u["email"])}</h3>
@@ -170,7 +188,9 @@
 							{u["email"]}
 						</h4>
 					</div>
-					<div class=" pl-12 flex justify-center items-center">
+					<div
+						class=" pl-12 flex flex-col justify-center items-center"
+					>
 						<div>
 							{#if selected_user_id != u["id"] || !grantsWindowActive}
 								<button

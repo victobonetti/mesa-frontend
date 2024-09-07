@@ -2,13 +2,29 @@
   import { setContext } from "svelte";
   import "../app.css";
   let errActive = false;
-  export let throwError = () => {
+  let errMessage = "";
+  let successActive = false;
+  let successMsg = "";
+
+  export let throwError = (
+    message = "Ocorreu um erro ao efetuar a requisição. Tente novamente.",
+  ) => {
+    errMessage = message;
     errActive = true;
     setTimeout(() => {
       errActive = false;
     }, 4000);
   };
-  setContext('notify', { throwError })
+
+  export let showSuccess = (message = "Ação concluída com sucesso.") => {
+    successMsg = message;
+    successActive = true;
+    setTimeout(() => {
+      successActive = false;
+    }, 4000);
+  };
+
+  setContext("notify", { throwError, showSuccess });
 </script>
 
 <main
@@ -17,15 +33,21 @@
   <slot />
 </main>
 
-
-{#if errActive}
-    <div
-        class="absolute right-0 bottom-0 w-full h-0 flex justify-end items-end"
-    >
-        <div
-            class=" animate-pulse opacity-70 select-none h-8 w-screen text-red-50 font-semibold bg-red-600 flex justify-center items-center"
-        >
-            Ocorreu um erro ao efetuar a requisição. Tente novamente.
-        </div>
-    </div>
+{#if errActive || successActive}
+  <div class="absolute right-0 bottom-0 w-full h-0 flex justify-end items-end">
+    {#if errActive}
+      <div
+        class=" animate-pulse opacity-70 select-none h-8 w-screen text-red-50 font-semibold bg-red-600 flex justify-center items-center"
+      >
+        {errMessage}
+      </div>
+    {/if}
+    {#if successActive}
+      <div
+        class=" animate-pulse opacity-70 select-none h-8 w-screen text-green-50 font-semibold bg-green-600 flex justify-center items-center"
+      >
+        {successMsg}
+      </div>
+    {/if}
+  </div>
 {/if}
