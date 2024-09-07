@@ -3,7 +3,9 @@
 	import { goto } from "$app/navigation";
 	import { ServiceRequest } from "../../services/serviceRequest";
 	import logo from "$lib/assets/logo.png";
+    import { getContext } from "svelte";
 
+	const { throwError } = getContext('notify')
 	let email = "";
 	let pass = "";
 	const loginTrigger = async () => {
@@ -17,7 +19,7 @@
 		);
 
 		if (result == null) {
-			alert("Erro ao efetuar login");
+			throwError()
 		} else {
 			goto("/apps");
 		}

@@ -1,8 +1,11 @@
 <script lang="ts">
+    import { getContext } from "svelte";
     import type { IEditPerson } from "../../../services/person/INewPerson";
 	import type INewPerson from "../../../services/person/INewPerson";
 	import { PersonService } from "../../../services/person/personService";
 	import NewPersonForm from "./components/NewPersonForm.svelte";
+
+	const { throwError } = getContext('notify')
 
 	// exports
 	export let data;

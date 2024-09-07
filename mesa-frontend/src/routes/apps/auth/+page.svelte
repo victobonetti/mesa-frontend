@@ -6,10 +6,11 @@
 	import { getExibitionName } from "../../../services/exibitionNames.js";
 	import { PersonService } from "../../../services/person/personService";
 	import { ServiceRequest } from "../../../services/serviceRequest";
+    import { getContext } from "svelte";
 
 	// exports
 	export let data;
-	export let throwError;
+	const { throwError } = getContext('notify')
 	let users = data.users;
 	let persons = data.persons;
 	let services = data.services;
