@@ -11,11 +11,8 @@ export class LoginService {
             }
         })
         console.log(result)
-        if (result.status == 200) {
-            setCookie('token', result.data['token'], 7)
-            setCookie('tenantid', result.data['tenant_id'], 7)
-            return true
-        }
-        return null
+        setCookie('token', result.data['token'], 7)
+        setCookie('tenantid', result.data['tenant_id'], 7)
+        return result.data
     }
 }

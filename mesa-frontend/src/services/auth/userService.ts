@@ -11,10 +11,8 @@ export class UserService {
                 'Authorization': `Bearer ${Cookies.get('token')}`
             }
         })
-        if (result.status == 200) {
-            return result.data
-        }
-        return null
+        return result.data
+
     }
 
     static async removeUser(user_id: string) {
@@ -24,10 +22,8 @@ export class UserService {
                 'Authorization': `Bearer ${Cookies.get('token')}`
             }
         })
-        if (result.status == 201) {
-            return result.data
-        }
-        return null
+        return result.data
+
     }
 
     static async createNewUser(email: string, password: string, is_admin: boolean) {
@@ -41,9 +37,6 @@ export class UserService {
                 'Authorization': `Bearer ${Cookies.get('token')}`
             }
         })
-        if (result.status == 201 || result.status == 200) {
-            return result.data
-        }
-        return null
+        return result.data
     }
 }

@@ -13,11 +13,7 @@ export class PersonService {
                 'Authorization': `Bearer ${Cookies.get('token')}`
             }
         })
-        console.log(result.request)
-        if (result.status == 200) {
-            return result.data
-        }
-        return null
+        return result.data
     }
 
     static async editPerson(personData: IEditPerson) {
@@ -38,10 +34,7 @@ export class PersonService {
                 'Authorization': `Bearer ${Cookies.get('token')}`
             }
         })
-        if (result.status == 201) {
-            return true
-        }
-        return null
+        return result.data
     }
 
     static async findPersons() {
@@ -51,11 +44,7 @@ export class PersonService {
                 'Authorization': `Bearer ${Cookies.get('token')}`
             }
         })
-        console.log(result.data)
-        if (result.status == 200) {
-            return result.data
-        }
-        return null
+        return result.data
     }
 
     static async createPerson(person: INewPerson) {
@@ -66,9 +55,6 @@ export class PersonService {
                 'Authorization': `Bearer ${Cookies.get('token')}`
             }
         })
-        if (result.status == 201) {
-            return result.data
-        }
-        return null
+        return result.data
     }
 }

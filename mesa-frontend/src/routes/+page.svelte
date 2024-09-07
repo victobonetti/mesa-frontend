@@ -1,16 +1,16 @@
 <script>
 	import waiter from '$lib/assets/waiter.jpg';
+	import logo from '$lib/assets/logo.png';
 </script>
 
 <div
 	class=" h-96 border rounded shadow-lg bg-neutral-100  flex items-center"
 >
-	<div class="w-1/2 p-8 ">
-		<h1 class="text-4xl select-none mb-2 font-semibold">MesaErp</h1>
-		<h4 class="mb-6">Operação simplificada</h4>
+	<div class="w-1/2 p-8 flex flex-col items-center">
+		<img class="w-64" src={logo} alt="logo">
 		<a
 			href="/login"
-			class="text-neutral-50 bg-neutral-900 w-32 py-2 px-6 rounded-full text-center"
+			class="text-neutral-50 mt-8 bg-neutral-800 w-32 py-2 px-6 rounded-full text-center"
 			>Iniciar</a
 		>
 	</div>

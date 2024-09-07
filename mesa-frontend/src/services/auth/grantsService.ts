@@ -17,11 +17,8 @@ export class GrantsService {
                 'Authorization': `Bearer ${Cookies.get('token')}`
             }
         })
-        console.log(result)
-        if (result.status == 200) {
-            return result.data
-        }
-        return null
+        return result.data
+
     }
 
     static async addGrant(user_id: string, level: GrantLevel, service: string) {
@@ -36,11 +33,7 @@ export class GrantsService {
                     'Authorization': `Bearer ${Cookies.get('token')}`
                 }
             })
-        console.log(result)
-        if (result.status == 200 || result.status == 201) {
-            return true
-        }
-        return null
+        return result.data
     }
 
     static async removeGrant( grant_id: string) {
@@ -52,9 +45,7 @@ export class GrantsService {
                     'Authorization': `Bearer ${Cookies.get('token')}`
                 }
             })
-        if (result.status == 200 || result.status == 201) {
-            return true
-        }
-        return null
+        return result.data
+
     }
 }

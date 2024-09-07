@@ -3,11 +3,12 @@
     import { getExibitionName } from '../../services/exibitionNames.js';
 
 	export let data;
+	export let throwError;
 
 	let services = data.services;
-	// if (!data.tenantId || !data.token) {
-	// 	goto("/login");
-	// }
+	if (!data.tenantId || !data.token) {
+		goto("/login");
+	}
 </script>
 
 <div class="w-screen h-screen p-12">

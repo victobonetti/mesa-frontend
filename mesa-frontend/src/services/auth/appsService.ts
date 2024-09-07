@@ -6,9 +6,6 @@ export class AppsService{
     static async findServices(){
         let result = await axios.get(api_services)
         console.log(result)
-        if (result.status == 200){
-            return result.data
-        }
-        return null
+        return result.data
     }
 }

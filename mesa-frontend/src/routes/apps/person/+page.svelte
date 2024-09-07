@@ -4,7 +4,9 @@
 	import { PersonService } from "../../../services/person/personService";
 	import NewPersonForm from "./components/NewPersonForm.svelte";
 
+	// exports
 	export let data;
+	export let throwError;
 	let persons = data.persons;
 
 	// Active windows state
@@ -106,19 +108,6 @@
 		edit_date_of_birth = p.date_of_birth;
 	};
 
-	// // Minimize or close windows
-	// const minimizeWindows = () => {
-	//   for (let k in windows) {
-	// 	windows[k].minimized = true;
-	//   }
-	// };
-
-	// const closeWindows = () => {
-	//   for (let k in windows) {
-	// 	windows[k].closed = true;
-	//   }
-	// };
-
 	const closeWindow = (windowName: string) => {
 		if (windowName == "novaPessoa") {
 			full_name = "";
@@ -159,7 +148,7 @@
 		</div>
 		<div>
 			<a
-				class="cursor-pointer px-4 py-1 rounded-full bg-neutral-900 hover:bg-neutral-800 text-neutral-50"
+				class="cursor-pointer px-4 py-1 rounded-full bg-neutral-800 hover:bg-neutral-800 text-neutral-50"
 				on:click={() => {
 					windows["novaPessoa"].closed = false;
 					windows["novaPessoa"].minimized = false;

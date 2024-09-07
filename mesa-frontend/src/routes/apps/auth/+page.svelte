@@ -1,15 +1,28 @@
 <script lang="ts">
+	// imports
 	import NewUserForm from "./components/NewUserForm.svelte";
-
 	import { GrantsService } from "../../../services/auth/grantsService.js";
 	import { UserService } from "../../../services/auth/userService.js";
 	import { getExibitionName } from "../../../services/exibitionNames.js";
 	import { PersonService } from "../../../services/person/personService";
+	import { ServiceRequest } from "../../../services/serviceRequest";
 
+	// exports
 	export let data;
+	export let throwError;
 	let users = data.users;
 	let persons = data.persons;
 	let services = data.services;
+
+	// vars
+	let selected_user_id = "";
+	let grant_opts: any[] = [];
+	let grantsWindowActive = false;
+	let isSuperAdmin: boolean = true;
+	let email = "";
+	let pass = "";
+	let isAdmin = false;
+	let newUserWindowActive = false;
 
 	const findUserName = (email: string) => {
 		let userName = "Usuário sem dados";
@@ -21,25 +34,18 @@
 		return userName;
 	};
 
-	let selected_user_id = "";
-	let grant_opts: any[] = [];
-
-	let grantsWindowActive = false;
-	let isSuperAdmin: boolean = true;
-
-	let email = "";
-	let pass = "";
-	let isAdmin = false;
-	let newUserWindowActive = false;
-
 	const createNewUser = async () => {
 		newUserWindowActive = false;
-		let result = await UserService.createNewUser(email, pass, isAdmin);
+		let result = await ServiceRequest.call(() =>
+			UserService.createNewUser(email, pass, isAdmin),
+		);
 		if (result == null) {
-			alert("Erro ao criar usuário");
+			throwError();
 		} else {
-			users = await UserService.findUsers();
-			persons = await PersonService.findPersons();
+			users = await ServiceRequest.call(() => UserService.findUsers());
+			persons = await ServiceRequest.call(() =>
+				PersonService.findPersons(),
+			);
 		}
 		email = "";
 		pass = "";
@@ -73,14 +79,18 @@
 	};
 
 	const grantsMap = async () => {
-		isSuperAdmin = false
-		let grants = await GrantsService.findGrants(selected_user_id);
+		isSuperAdmin = false;
+		let grants = await ServiceRequest.call(() =>
+			GrantsService.findGrants(selected_user_id),
+		);
+		if (!grants) {
+			throwError();
+		}
 		if (grants.length > 0 && grants[0]["service_name"] == "*") {
 			isSuperAdmin = true;
-		} 
+		}
 		grant_opts = getServicesObject(grants);
 		grantsWindowActive = true;
-
 	};
 
 	const openGrantsWindow = (user_id: string) => {
@@ -89,21 +99,19 @@
 		grantsMap();
 	};
 
-	async function change_grant(
+	const change_grant = async (
 		e: MouseEvent,
 		grant_level: number,
 		actual_state: boolean,
 		grant_id: string,
 		service: string,
-	) {
+	) => {
 		e.preventDefault();
 		let result;
 
 		if (actual_state == false) {
-			result = await GrantsService.addGrant(
-				selected_user_id,
-				grant_level,
-				service,
+			result = await ServiceRequest.call(() =>
+				GrantsService.addGrant(selected_user_id, grant_level, service),
 			);
 		}
 
@@ -116,15 +124,17 @@
 		if (result == null) {
 			alert("Erro ao alterar permissões");
 		}
-	}
+	};
 
-	async function deleteUser(user_id: string) {
-		let result = await UserService.removeUser(user_id);
+	const deleteUser = async (user_id: string) => {
+		let result = await ServiceRequest.call(() =>
+			UserService.removeUser(user_id),
+		);
 		if (result == null) {
 			alert("Erro ao excluir usuário");
 		}
 		users = await UserService.findUsers();
-	}
+	};
 </script>
 
 <div class="w-screen h-screen p-12">
@@ -140,7 +150,7 @@
 		<div class="w-1/2 h-12 flex justify-end items-end">
 			<button
 				on:click={() => (newUserWindowActive = true)}
-				class=" shadow-inner bg-neutral-900 hover:bg-neutral-800 text-neutral-100 rounded-full w-36 px-4 py-2"
+				class=" shadow-inner bg-neutral-800 hover:bg-neutral-800 text-neutral-100 rounded-full w-36 px-4 py-2"
 				>+ Novo usuário</button
 			>
 		</div>
@@ -200,30 +210,32 @@
 				</p>
 				<div class="p-2">
 					{#if isSuperAdmin}
-					<div class=" border-b mb-2">
-						<h3 class=" text-sm font-light select-none">
-							Super Admin
-						</h3>
-						<div class="flex flex-col mb-2 mt-1">
-							<div class="flex">
-								<input
-									checked={isSuperAdmin}
-									id="superadmin"
-									type="checkbox"
-									disabled
-								/>
-								<label
-									class="text-xs ml-0.5 flex opacity-80"
-									for="superadmin"
-									>Habilitado
-									<p class="text-xs text-red-500">*</p></label
-								>
+						<div class=" border-b mb-2">
+							<h3 class=" text-sm font-light select-none">
+								Super Admin
+							</h3>
+							<div class="flex flex-col mb-2 mt-1">
+								<div class="flex">
+									<input
+										checked={isSuperAdmin}
+										id="superadmin"
+										type="checkbox"
+										disabled
+									/>
+									<label
+										class="text-xs ml-0.5 flex opacity-80"
+										for="superadmin"
+										>Habilitado
+										<p class="text-xs text-red-500">
+											*
+										</p></label
+									>
+								</div>
+								<p class="text-red-500 text-xs">
+									* Todas as permissões habilitadas
+								</p>
 							</div>
-							<p class="text-red-500 text-xs">
-								* Todas as permissões habilitadas
-							</p>
 						</div>
-					</div>
 					{/if}
 					<div>
 						{#if !isSuperAdmin}
