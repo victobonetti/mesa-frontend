@@ -156,10 +156,10 @@
 	};
 </script>
 
-<div class="w-screen h-screen p-8">
+<div class="w-screen h-screen p-12">
 	<div class="h-16 w-full flex justify-between items-center">
 		<div class="mb-4">
-			<h1 class="select-none text-2xl mb-2">Pessoas cadastradas</h1>
+			<h1 class=" select-none text-2xl mb-2">Pessoas cadastradas</h1>
 			<p class=" select-none text-xs text-left text-neutral-600">
 				Crie pessoas. Clique nas tabela para visualizar individualmente
 				e editar.
