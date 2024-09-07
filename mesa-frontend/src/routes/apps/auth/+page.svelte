@@ -28,7 +28,7 @@
 
 	const findUserName = (email: string) => {
 		let userName = "Usuário sem dados";
-		for (let p of persons.result) {
+		for (let p of persons) {
 			if (p["email"] == email) {
 				userName = p["full_name"];
 			}
@@ -56,7 +56,7 @@
 			);
 			let personErr = handleResponse(reqPersons, throwError);
 			if (!personErr) {
-				persons = reqPersons.result;
+				persons = reqPersons;
 			}
 		}
 		email = "";
@@ -66,11 +66,10 @@
 
 	const getServicesObject = (grants: any[]) => {
 		let temp_map = [];
-		for (let service of services.result) {
+		for (let service of services) {
 			let grant_level = 0;
 			let grant_id = "";
 			for (let grant of grants) {
-				console.log(service);
 				if (grant["service_name"] == service["service_name"]) {
 					grant_level = grant["grant_level"];
 					grant_id = grant["id"];
@@ -86,7 +85,6 @@
 				grant_id,
 			});
 		}
-		console.log(temp_map);
 		return temp_map;
 	};
 
@@ -176,7 +174,7 @@
 	</div>
 	<div class=" w-full border-t pt-6 flex-wrap gap-4 flex">
 		<div class=" flex flex-col items-center">
-			{#each users.result as u}
+			{#each users as u}
 				<div
 					class="{selected_user_id != u['id']
 						? `border-b`

@@ -37,7 +37,6 @@ export class GrantsService {
     }
 
     static async removeGrant( grant_id: string) {
-        console.log(grant_id)
         let result = await axios.delete(`${api_grants}?grant_id=${grant_id}`,
             {
                 headers: {

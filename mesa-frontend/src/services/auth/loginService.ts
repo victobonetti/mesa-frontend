@@ -10,7 +10,6 @@ export class LoginService {
                 "Content-Type": "application/json",
             }
         })
-        console.log(result)
         setCookie('token', result.data['token'], 7)
         setCookie('tenantid', result.data['tenant_id'], 7)
         return result.data

@@ -48,7 +48,6 @@ export class PersonService {
     }
 
     static async createPerson(person: INewPerson) {
-        console.log(person)
         let result = await axios.post(api_person, person, {
             headers: {
                 'X-Tenant-ID': Cookies.get('tenantid'),

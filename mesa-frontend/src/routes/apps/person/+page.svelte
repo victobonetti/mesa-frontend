@@ -103,7 +103,6 @@
 	};
 
 	const deletePerson = async () => {
-		console.log(edit_id);
 		let result = await ServiceRequest.call(() =>
 			PersonService.deletePerson(edit_id),
 		);
