@@ -2,12 +2,17 @@
     export let val: string;
     export let id: string;
     export let label: string;
+    export let is_mandatory: boolean = false;
 
 </script>
 
 <div class="mb-4">
-    <label for={id} class="block text-xs font-medium text-neutral-700"
-        >{label}</label
+    <label for={id} class="flex text-xs font-medium text-neutral-700"
+        >{label} 
+        {#if is_mandatory}
+        <p class="text-red-500">*</p>
+        {/if}
+        </label
     >
     <input
         type="text"

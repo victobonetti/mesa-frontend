@@ -37,14 +37,14 @@
   <div class="absolute right-0 bottom-0 w-full h-0 flex justify-end items-end">
     {#if errActive}
       <div
-        class=" animate-pulse opacity-70 select-none h-8 w-screen text-red-50 font-semibold bg-red-600 flex justify-center items-center"
+        class=" z-50 animate-pulse opacity-70 select-none h-8 w-screen text-red-50 font-semibold bg-red-600 flex justify-center items-center"
       >
         {errMessage}
       </div>
     {/if}
     {#if successActive}
       <div
-        class=" animate-pulse opacity-70 select-none h-8 w-screen text-green-50 font-semibold bg-green-600 flex justify-center items-center"
+        class=" z-50 animate-pulse opacity-70 select-none h-8 w-screen text-green-50 font-semibold bg-green-600 flex justify-center items-center"
       >
         {successMsg}
       </div>

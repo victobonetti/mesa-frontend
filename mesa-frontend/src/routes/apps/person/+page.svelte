@@ -205,10 +205,6 @@
 						class="px-2 py-1 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-neutral-600 uppercase tracking-wider"
 						>Endereço</th
 					>
-					<th
-						class="px-2 py-1 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-neutral-600 uppercase tracking-wider"
-						>Status</th
-					>
 				</tr>
 			</thead>
 			<tbody class="bg-white">
@@ -235,9 +231,6 @@
 						<td class="px-2 text-xs py-1 border-b border-gray-200"
 							>{p.address.street}, {p.address.number}, {p.address
 								.city}, {p.address.cep}</td
-						>
-						<td class="px-2 text-xs py-1 border-b border-gray-200"
-							>{p.status}</td
 						>
 					</tr>
 				{/each}

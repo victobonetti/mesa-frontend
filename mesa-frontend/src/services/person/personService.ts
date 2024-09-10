@@ -3,7 +3,7 @@ import Cookies from "js-cookie"
 import type INewPerson from "./INewPerson";
 import type { IEditPerson } from "./INewPerson";
 
-let api_person = 'http://192.168.90.90/api/person/'
+let api_person = 'http://192.168.90.90/api/person'
 
 export class PersonService {
     static async deletePerson(edit_id: string) {

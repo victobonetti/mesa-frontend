@@ -53,7 +53,7 @@
 		</div>
 
 		{#if type == "update"}{/if}
-		<Input id="full_name" label="Nome" bind:val={full_name} />
+		<Input id="full_name" is_mandatory={true} label="Nome" bind:val={full_name} />
 		<Input id="cpf" label="CPF" bind:val={cpf} />
 		<Input id="address" label="Endereço" bind:val={address} />
 		<Input id="address_number" label="Número" bind:val={address_number} />
@@ -73,20 +73,7 @@
 				class="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-xs"
 			/>
 		</div>
-		<div class="mb-4">
-			<label
-				for="date_of_birth"
-				class="block text-xs font-medium text-neutral-700"
-				>Data Nasc.</label
-			>
-			<input
-				placeholder=""
-				type="date"
-				id="date_of_birth"
-				bind:value={date_of_birth}
-				class="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-xs"
-			/>
-		</div>
+		<Input id="date_of_birth" label="Data Nasc." bind:val={date_of_birth} />
 	</div>
 	<div class="w-full flex justify-end pr-4">
 		{#if type == "create"}

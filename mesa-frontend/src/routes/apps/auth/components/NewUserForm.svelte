@@ -33,7 +33,7 @@
 		<div class="mb-4">
 			<label
 				for="email"
-				class="block text-xs font-medium text-neutral-700">Email</label
+				class="flex text-xs font-medium text-neutral-700">Email<p class="ml-1 text-red-500 text-xs">*</p></label
 			>
 			<input
 				placeholder=""
@@ -43,12 +43,12 @@
 				class="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-xs"
 			/>
 		</div>
-		<Input id="pass" label="Senha" bind:val={pass} />
+		<Input id="pass" label="Senha" is_mandatory={true} bind:val={pass} />
 		<div class="mb-4 flex items-center">
 			<label
 				for="email"
 				class="block flex text-xs font-medium text-neutral-700"
-				>Is admin? <p class="ml-1 text-red-500 text-xs">*</p></label
+				>Usuário privilegiado</label
 			>
 			<input
 				placeholder=""
@@ -58,7 +58,7 @@
 				class="ml-2 mt-0.5 border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-xs"
 			/>
 		</div>
-		<p class="text-red-500 text-xs">* Todas as permissões habilitadas</p>
+		<p class="text-neutral-500 text-xs select-none">Usuário privilegiado tem todas as permissões habilitadas</p>
 	</div>
 	<div class="w-full flex justify-end pr-4">
 		<button

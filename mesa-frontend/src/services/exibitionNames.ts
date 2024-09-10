@@ -3,7 +3,7 @@ export function getExibitionName(service_name:string) {
         case "auth":
             return "Usuários do domínio"
         case "person":
-            return "Pessoas"
+            return "Cadastro de pessoas"
         default:
             return service_name
     }
