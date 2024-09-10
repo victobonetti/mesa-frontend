@@ -47,7 +47,7 @@
 		<div class="mb-4 flex items-center">
 			<label
 				for="email"
-				class="block flex text-xs font-medium text-neutral-700"
+				class="flex text-xs font-medium text-neutral-700"
 				>Usuário privilegiado</label
 			>
 			<input

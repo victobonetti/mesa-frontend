@@ -174,45 +174,50 @@
 	</div>
 	<div class=" w-full border-t pt-6 flex-wrap gap-4 flex">
 		<div class=" flex flex-col items-center">
-			{#each users as u}
-				<div
-					class="{selected_user_id != u['id']
-						? `border-b`
-						: `border-2 border-gray-500 rounded`} p-2 mb-2 pb-2 flex"
-				>
-					<div class=" w-56">
-						<h3 class=" font-medium">{findUserName(u["email"])}</h3>
-						<h4 class="ml-0.5 text-sm text-neutral-600">
-							{u["email"]}
-						</h4>
-					</div>
+			{#if users}
+				{#each users as u}
 					<div
-						class=" pl-12 flex flex-col justify-center items-center"
+						class="{selected_user_id != u['id']
+							? `border-b`
+							: `border-2 border-gray-500 rounded`} p-2 mb-2 pb-2 flex"
 					>
-						<div>
-							{#if selected_user_id != u["id"] || !grantsWindowActive}
+						<div class=" w-56">
+							<h3 class=" font-medium">
+								{findUserName(u["email"])}
+							</h3>
+							<h4 class="ml-0.5 text-sm text-neutral-600">
+								{u["email"]}
+							</h4>
+						</div>
+						<div
+							class=" pl-12 flex flex-col justify-center items-center"
+						>
+							<div>
+								{#if selected_user_id != u["id"] || !grantsWindowActive}
+									<button
+										on:click={() =>
+											openGrantsWindow(u["id"])}
+										class=" shadow-inner bg-yellow-500 text-yellow-900 rounded-full text-xs w-36 px-4 py-2"
+										>Permissões</button
+									>
+								{:else}
+									<button
+										on:click={() =>
+											(grantsWindowActive = false)}
+										class=" shadow-inner bg-yellow-400 text-yellow-800 rounded-full text-xs w-36 px-4 py-2"
+										>Permissões</button
+									>
+								{/if}
 								<button
-									on:click={() => openGrantsWindow(u["id"])}
-									class=" shadow-inner bg-yellow-500 text-yellow-900 rounded-full text-xs w-36 px-4 py-2"
-									>Permissões</button
+									on:click={() => deleteUser(u["id"])}
+									class=" mt-2 shadow-inner bg-red-900 hover:bg-red-800 text-red-100 rounded-full text-xs w-36 px-4 py-2"
+									>Remover usuário</button
 								>
-							{:else}
-								<button
-									on:click={() =>
-										(grantsWindowActive = false)}
-									class=" shadow-inner bg-yellow-400 text-yellow-800 rounded-full text-xs w-36 px-4 py-2"
-									>Permissões</button
-								>
-							{/if}
-							<button
-								on:click={() => deleteUser(u["id"])}
-								class=" mt-2 shadow-inner bg-red-900 hover:bg-red-800 text-red-100 rounded-full text-xs w-36 px-4 py-2"
-								>Remover usuário</button
-							>
+							</div>
 						</div>
 					</div>
-				</div>
-			{/each}
+				{/each}
+			{/if}
 		</div>
 		{#if grantsWindowActive}
 			<div
@@ -263,71 +268,73 @@
 							>
 								Serviços
 							</h2>
-							{#each grant_opts as g}
-								<h3
-									class=" mt-2 text-sm font-light select-none"
-								>
-									{g["service_exibition_name"]}
-								</h3>
-								<div class="flex mt-1">
-									<div>
-										<input
-											id="read"
-											type="checkbox"
-											checked={g["grant_level"] == 4}
-											on:click={(e) =>
-												change_grant(
-													e,
-													4,
-													g["grant_level"] == 4,
-													g["grant_id"],
-													g["service"],
-												)}
-										/>
-										<label class="text-xs ml-0.5" for="read"
-											>Leitura</label
-										>
+							{#if grant_opts}
+								{#each grant_opts as g}
+									<h3
+										class=" mt-2 text-sm font-light select-none"
+									>
+										{g["service_exibition_name"]}
+									</h3>
+									<div class="flex mt-1">
+										<div>
+											<input
+												id="read"
+												type="checkbox"
+												checked={g["grant_level"] == 4}
+												on:click={(e) =>
+													change_grant(
+														e,
+														4,
+														g["grant_level"] == 4,
+														g["grant_id"],
+														g["service"],
+													)}
+											/>
+											<label class="text-xs ml-0.5" for="read"
+												>Leitura</label
+											>
+										</div>
+										<div class="ml-4">
+											<input
+												id="write"
+												type="checkbox"
+												checked={g["grant_level"] == 5}
+												on:click={(e) =>
+													change_grant(
+														e,
+														5,
+														g["grant_level"] == 5,
+														g["grant_id"],
+														g["service"],
+													)}
+											/>
+											<label
+												class="text-xs ml-0.5"
+												for="write">Escrita</label
+											>
+										</div>
+										<div class="ml-4">
+											<input
+												id="admin"
+												type="checkbox"
+												checked={g["grant_level"] == 7}
+												on:click={(e) =>
+													change_grant(
+														e,
+														7,
+														g["grant_level"] == 7,
+														g["grant_id"],
+														g["service"],
+													)}
+											/>
+											<label
+												class="text-xs ml-0.5"
+												for="admin">Gerenciar</label
+											>
+										</div>
 									</div>
-									<div class="ml-4">
-										<input
-											id="write"
-											type="checkbox"
-											checked={g["grant_level"] == 5}
-											on:click={(e) =>
-												change_grant(
-													e,
-													5,
-													g["grant_level"] == 5,
-													g["grant_id"],
-													g["service"],
-												)}
-										/>
-										<label
-											class="text-xs ml-0.5"
-											for="write">Escrita</label
-										>
-									</div>
-									<div class="ml-4">
-										<input
-											id="admin"
-											type="checkbox"
-											checked={g["grant_level"] == 7}
-											on:click={(e) =>
-												change_grant(
-													e,
-													7,
-													g["grant_level"] == 7,
-													g["grant_id"],
-													g["service"],
-												)}
-										/>
-										<label
-											class="text-xs ml-0.5"
-											for="admin">Gerenciar</label
-										>
-									</div>
-								</div>
-							{/each}
+								{/each}
+							{/if}
 						{/if}
 					</div>
 				</div>

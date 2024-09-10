@@ -208,32 +208,40 @@
 				</tr>
 			</thead>
 			<tbody class="bg-white">
-				{#each persons as p}
-					<tr
-						on:click={() => editPersonModalActive(p)}
-						class="select-none bg-transparent hover:bg-neutral-100"
-					>
-						<td class="px-2 text-xs py-1 border-b border-gray-200"
-							>{p.full_name}</td
+				{#if persons}
+					{#each persons as p}
+						<tr
+							on:click={() => editPersonModalActive(p)}
+							class="select-none bg-transparent hover:bg-neutral-100"
 						>
-						<td class="px-2 text-xs py-1 border-b border-gray-200"
-							>{p.cpf}</td
-						>
-						<td class="px-2 text-xs py-1 border-b border-gray-200"
-							>{p.date_of_birth}</td
-						>
-						<td class="px-2 text-xs py-1 border-b border-gray-200"
-							>{p.email}</td
-						>
-						<td class="px-2 text-xs py-1 border-b border-gray-200"
-							>{p.phone}</td
-						>
-						<td class="px-2 text-xs py-1 border-b border-gray-200"
-							>{p.address.street}, {p.address.number}, {p.address
-								.city}, {p.address.cep}</td
-						>
-					</tr>
-				{/each}
+							<td
+								class="px-2 text-xs py-1 border-b border-gray-200"
+								>{p.full_name}</td
+							>
+							<td
+								class="px-2 text-xs py-1 border-b border-gray-200"
+								>{p.cpf}</td
+							>
+							<td
+								class="px-2 text-xs py-1 border-b border-gray-200"
+								>{p.date_of_birth}</td
+							>
+							<td
+								class="px-2 text-xs py-1 border-b border-gray-200"
+								>{p.email}</td
+							>
+							<td
+								class="px-2 text-xs py-1 border-b border-gray-200"
+								>{p.phone}</td
+							>
+							<td
+								class="px-2 text-xs py-1 border-b border-gray-200"
+								>{p.address.street}, {p.address.number}, {p
+									.address.city}, {p.address.cep}</td
+							>
+						</tr>
+					{/each}
+				{/if}
 			</tbody>
 		</table>
 	</div>
