@@ -47,6 +47,16 @@ export class PersonService {
         return result.data
     }
 
+    static async findPersonByEmail(email: string) {
+        let result = await axios.get(`${api_person}?email=${email}`, {
+            headers: {
+                'X-Tenant-ID': Cookies.get('tenantid'),
+                'Authorization': `Bearer ${Cookies.get('token')}`
+            }
+        })
+        return result.data
+    }
+
     static async createPerson(person: INewPerson) {
         let result = await axios.post(api_person, person, {
             headers: {

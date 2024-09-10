@@ -73,7 +73,7 @@
 				class="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-xs"
 			/>
 		</div>
-		<Input id="date_of_birth" label="Data Nasc." bind:val={date_of_birth} />
+		<Input id="date_of_birth" label="Data Nasc. (dd-mm-aaa)" bind:val={date_of_birth} />
 	</div>
 	<div class="w-full flex justify-end pr-4">
 		{#if type == "create"}

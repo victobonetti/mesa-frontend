@@ -6,14 +6,33 @@ import { AppsService } from "../../../services/auth/appsService"
 import { ServiceRequest } from "../../../services/serviceRequest"
 export const load = async () => {
     let users = await ServiceRequest.call(() => UserService.findUsers())
-    let persons = await ServiceRequest.call(() => PersonService.findPersons())
     let services = await ServiceRequest.call(() => AppsService.findServices())
+
+    const findUserName = async (email: string) => {
+		let userName = "Usuário sem dados";
+		let reqPerson = await ServiceRequest.call(() =>
+			PersonService.findPersonByEmail(email),
+		);
+		if (!reqPerson.err) {
+			let user = reqPerson.result;
+			console.log(user["full_name"]);
+			userName = user["full_name"];
+		}
+		return userName;
+	};
+
+    let usernames = {};
+    for(let user of users.result) {
+        let email = user["email"]
+        let username = await findUserName(email)
+        usernames[email] = username
+    }
 
     return {
         services: services.result,
-        persons: persons.result,
         users: users.result,
         tenantId: Cookies.get('tenantid'),
-        token: Cookies.get('token')
+        token: Cookies.get('token'),
+        usernames
     }
 }

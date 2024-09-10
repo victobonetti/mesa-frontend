@@ -15,6 +15,7 @@
 	let users = data.users;
 	let persons = data.persons;
 	let services = data.services;
+	let usernames = data.usernames
 
 	// vars
 	let selected_user_id = "";
@@ -25,16 +26,6 @@
 	let pass = "";
 	let isAdmin = false;
 	let newUserWindowActive = false;
-
-	const findUserName = (email: string) => {
-		let userName = "Usuário sem dados";
-		for (let p of persons) {
-			if (p["email"] == email) {
-				userName = p["full_name"];
-			}
-		}
-		return userName;
-	};
 
 	const createNewUser = async () => {
 		newUserWindowActive = false;
@@ -66,25 +57,31 @@
 
 	const getServicesObject = (grants: any[]) => {
 		let temp_map = [];
-		for (let service of services) {
-			let grant_level = 0;
-			let grant_id = "";
-			for (let grant of grants) {
-				if (grant["service_name"] == service["service_name"]) {
-					grant_level = grant["grant_level"];
-					grant_id = grant["id"];
+		if (services) {
+			for (let service of services) {
+				let grant_level = 0;
+				let grant_id = "";
+				if (grants) {
+					for (let grant of grants) {
+						if (grant["service_name"] == service["service_name"]) {
+							grant_level = grant["grant_level"];
+							grant_id = grant["id"];
+						}
+					}
 				}
+
+				let service_exibition_name = getExibitionName(
+					service["service_name"],
+				);
+				temp_map.push({
+					service: service["service_name"],
+					service_exibition_name,
+					grant_level,
+					grant_id,
+				});
 			}
-			let service_exibition_name = getExibitionName(
-				service["service_name"],
-			);
-			temp_map.push({
-				service: service["service_name"],
-				service_exibition_name,
-				grant_level,
-				grant_id,
-			});
 		}
+
 		return temp_map;
 	};
 
@@ -183,7 +180,7 @@
 					>
 						<div class=" w-56">
 							<h3 class=" font-medium">
-								{findUserName(u["email"])}
+								{usernames[u["email"]]}
 							</h3>
 							<h4 class="ml-0.5 text-sm text-neutral-600">
 								{u["email"]}
@@ -290,8 +287,9 @@
 														g["service"],
 													)}
 											/>
-											<label class="text-xs ml-0.5" for="read"
-												>Leitura</label
+											<label
+												class="text-xs ml-0.5"
+												for="read">Leitura</label
 											>
 										</div>
 										<div class="ml-4">
