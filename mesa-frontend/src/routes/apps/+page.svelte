@@ -15,7 +15,7 @@
 	<div class=" w-full border-t pt-6 flex flex-wrap gap-4">
 		{#if services}
 			{#each services as s}
-				<button
+				<button type="button"
 					on:click={() => goto(`/apps/${s["service_name"]}`)}
 					class=" hover:scale-105 cursor-pointer flex items-center justify-center border border-slate-300 text-slate-800 select-none h-24 w-48 font-thin text-xl"
 					>{getExibitionName(s["service_name"])}</button
