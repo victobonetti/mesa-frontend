@@ -212,7 +212,7 @@
 					{#each persons as p}
 						<tr
 							on:click={() => editPersonModalActive(p)}
-							class="select-none bg-transparent hover:bg-neutral-100"
+							class="select-none bg-transparent hover:bg-transparent"
 						>
 							<td
 								class="px-2 text-xs py-1 border-b border-gray-200"
@@ -251,7 +251,7 @@
 	{#if windows["novaPessoa"].minimized && !windows["novaPessoa"].closed}
 		<div
 			on:click={() => (windows["novaPessoa"].minimized = false)}
-			class=" relative z-20 p-2 h-32 w-16 bg-neutral-200 border-neutral-400 border rounded-t shadow-2xl"
+			class=" relative z-20 p-2 h-32 w-16 bg-neutral-50 border-neutral-400 border rounded-t shadow-2xl"
 		>
 			<p class="select-none text-xs font-thin">Novo cadastro</p>
 		</div>
@@ -260,7 +260,7 @@
 	{#if windows["editaPessoa"].minimized && !windows["editaPessoa"].closed}
 		<div
 			on:click={() => (windows["editaPessoa"].minimized = false)}
-			class="relative z-20 p-2 h-32 w-16 bg-neutral-200 border-neutral-400 border rounded-t shadow-2xl"
+			class="relative z-20 p-2 h-32 w-16 bg-neutral-50 border-neutral-400 border rounded-t shadow-2xl"
 		>
 			<p class="select-none text-xs font-thin">Editar cadastro</p>
 		</div>

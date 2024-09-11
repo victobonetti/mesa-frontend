@@ -20,7 +20,7 @@
 </script>
 
 <div
-	class="relative z-20 bg-neutral-200 border-neutral-400 border rounded-tl shadow-2xl"
+	class="relative z-20 bg-neutral-50 border-neutral-400 border rounded-tl shadow-2xl"
 >
 	<div class="p-4 min-w-md mx-auto">
 		<div

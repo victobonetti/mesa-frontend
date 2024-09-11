@@ -34,7 +34,7 @@
 </script>
 
 <div
-	class=" h-96 w-96 border rounded shadow-lg bg-neutral-100 pt-8 flex flex-col items-center"
+	class=" h-96 w-96 border rounded shadow-lg bg-transparent pt-8 flex flex-col items-center"
 >
 	<img class="w-64 mb-4" src={logo} alt="logo" />
 	<div class="h-56 flex flex-col items-center justify-center p-8">
