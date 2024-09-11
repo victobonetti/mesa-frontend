@@ -8,7 +8,7 @@
 	import { Button } from "$lib/components/ui/button";
 	import { Input } from "$lib/components/ui/input/index.js";
 	import { Label } from "$lib/components/ui/label/index.js";
-	import Reload from "svelte-radix/Reload.svelte";
+	import Icon from "@iconify/svelte";
 
 	const { throwError } = getContext("notify");
 	let email = "";
@@ -62,8 +62,9 @@
 				</div>
 			</div>
 
-			<Button on:click={loginTrigger} class="mb-4">Login</Button>
-			<Button variant="link" class="text-xs" href="/">Tela inicial</Button
+			<Button on:click={loginTrigger} class="mb-2 w-32">Login</Button>
+			<Button variant="link" class="text-xs"
+				>Esqueci minha senha</Button
 			>
 		{:else}
 			<div class="w-72 mb-6">
@@ -89,8 +90,16 @@
 				</div>
 			</div>
 
-			<Button class="mb-4" disabled>Por favor, aguarde</Button>
-			<Button variant="link" class="text-xs" disabled>Tela inicial</Button>
+			<Button class="mb-2 w-32" disabled>
+				Aguarde
+				<Icon
+					class="ml-2 text-lg"
+					icon="svg-spinners:bars-rotate-fade"
+				/>
+			</Button>
+			<Button variant="link" class="text-xs" disabled
+				>Esqueci minha senha</Button
+			>
 		{/if}
 	</div>
 </div>
