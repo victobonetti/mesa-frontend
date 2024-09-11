@@ -8,8 +8,10 @@
 	import { ServiceRequest } from "../../../services/serviceRequest";
 	import { getContext } from "svelte";
 	import { handleResponse } from "../../../services/handleResponse";
-    import { Button } from "$lib/components/ui/button";
-    import Icon from "@iconify/svelte";
+	import { Button } from "$lib/components/ui/button";
+	import Icon from "@iconify/svelte";
+	import * as Table from "$lib/components/ui/table";
+	import * as DropdownMenu from "$lib/components/ui/dropdown-menu";
 
 	// exports
 	export let data;
@@ -155,7 +157,11 @@
 <div>
 	<div class="mb-4 flex">
 		<div class="w-1/2">
-			<h1 class=" pb-2 text-2xl font-semibold tracking-tight transition-colors">Usuários do domínio</h1>
+			<h1
+				class=" pb-2 text-2xl font-semibold tracking-tight transition-colors"
+			>
+				Usuários do domínio
+			</h1>
 			<p class=" select-none text-xs text-left text-neutral-600">
 				Gerencie usuários com acesso ao sistema; O email do registro irá
 				obter as informações cadastradas no módulo de cadastro de
@@ -164,70 +170,74 @@
 		</div>
 		<div class="w-1/2 h-12 flex justify-end items-end">
 			<!-- material-symbols:add -->
-			<Button
-				on:click={() => (newUserWindowActive = true)}
-				> 
-				<Icon class="text-lg mr-1 mt-0.5" icon="material-symbols:add"/>
+			<Button on:click={() => (newUserWindowActive = true)}>
+				<Icon class="text-lg mr-1 mt-0.5" icon="material-symbols:add" />
 				Novo usuário
-				</Button
-			>
+			</Button>
 		</div>
 	</div>
 	<div class=" w-full border-t pt-6 flex-wrap gap-4 flex">
 		<div class=" flex flex-col items-center">
 			{#if users}
-				{#each users as u}
-					<div
-						class="{selected_user_id != u['id']
-							? `border-b`
-							: `border-2 border-gray-500 rounded`} p-2 mb-2 pb-2 flex"
-					>
-						<div class=" w-56">
-							{#if usernames[u["email"]]}
-								<h3 class=" font-medium">
-									{usernames[u["email"]]}
-								</h3>
-							{:else}
-								<h3 class=" font-medium text-red-400">
-									Usuário sem registro
-								</h3>
-								<p class="text-xs text-neutral-500">
-									Faça registro das informações no módulo de
-									cadastro de pessoas
-								</p>
-							{/if}
-							<h4 class="ml-0.5 mt-1 text-xs text-neutral-600">
-								{u["email"]}
-							</h4>
-						</div>
-						<div
-							class=" pl-12 flex flex-col justify-center items-center"
-						>
-							<div>
-								{#if selected_user_id != u["id"] || !grantsWindowActive}
-									<button
-										on:click={() =>
-											openGrantsWindow(u["id"])}
-										class=" shadow-inner bg-yellow-500 text-yellow-900 rounded-full text-xs w-36 px-4 py-2"
-										>Permissões</button
+				<Table.Root>
+					<Table.Header>
+						<Table.Row>
+							<Table.Head>Nome</Table.Head>
+							<Table.Head>Email</Table.Head>
+						</Table.Row>
+					</Table.Header>
+					<Table.Body>
+						{#each users as u}
+							<Table.Row>
+								{#if usernames[u["email"]]}
+									<Table.Cell class="font-medium"
+										>{usernames[u["email"]]}</Table.Cell
 									>
 								{:else}
-									<button
-										on:click={() =>
-											(grantsWindowActive = false)}
-										class=" shadow-inner bg-yellow-400 text-yellow-800 rounded-full text-xs w-36 px-4 py-2"
-										>Permissões</button
+									<Table.Cell class="text-red-500"
+										>Usuário sem registro</Table.Cell
 									>
 								{/if}
-								<button
-									on:click={() => deleteUser(u["id"])}
-									class=" mt-2 shadow-inner bg-red-900 hover:bg-red-800 text-red-100 rounded-full text-xs w-36 px-4 py-2"
-									>Remover usuário</button
+								<Table.Cell>{u["email"]}</Table.Cell>
+								<Table.Cell class="text-right"
+									><DropdownMenu.Root>
+										<DropdownMenu.Trigger
+											asChild
+											let:builder
+										>
+											<Button
+												builders={[builder]}
+												variant="outline">Opções</Button
+											>
+										</DropdownMenu.Trigger>
+										<DropdownMenu.Content>
+											<DropdownMenu.Group>
+												<DropdownMenu.Label
+													>Editar</DropdownMenu.Label
+												>
+												<DropdownMenu.Separator />
+												<DropdownMenu.Item
+													on:click={() =>
+														openGrantsWindow(
+															u["id"],
+														)}
+													class="cursor-pointer"
+													>Ver permissões</DropdownMenu.Item
+												>
+												<DropdownMenu.Item
+													on:click={() =>
+														deleteUser(u["id"])}
+													class=" cursor-pointer text-red-500"
+													>Remover</DropdownMenu.Item
+												>
+											</DropdownMenu.Group>
+										</DropdownMenu.Content>
+									</DropdownMenu.Root></Table.Cell
 								>
-							</div>
-						</div>
-					</div>
-				{/each}
+							</Table.Row>
+						{/each}
+					</Table.Body>
+				</Table.Root>
 			{/if}
 		</div>
 		{#if grantsWindowActive}
