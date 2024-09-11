@@ -27,7 +27,11 @@
 	"type": "module",
 	"dependencies": {
 		"axios": "^1.7.5",
+		"bits-ui": "^0.21.13",
+		"clsx": "^2.1.1",
 		"js-cookie": "^3.0.5",
-		"mesa-frontend": "file:"
+		"mesa-frontend": "file:",
+		"tailwind-merge": "^2.5.2",
+		"tailwind-variants": "^0.2.1"
 	}
 }
