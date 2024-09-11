@@ -9,7 +9,7 @@ export const load = async () => {
     let services = await ServiceRequest.call(() => AppsService.findServices())
 
     const findUserName = async (email: string) => {
-		let userName = "Usuário sem dados";
+		let userName = undefined
 		let reqPerson = await ServiceRequest.call(() =>
 			PersonService.findPersonByEmail(email),
 		);
@@ -22,11 +22,14 @@ export const load = async () => {
 	};
 
     let usernames = {};
-    for(let user of users.result) {
-        let email = user["email"]
-        let username = await findUserName(email)
-        usernames[email] = username
+    if(users.result){
+        for(let user of users.result) {
+            let email = user["email"]
+            let username = await findUserName(email)
+            usernames[email] = username
+        }
     }
+
 
     return {
         services: services.result,

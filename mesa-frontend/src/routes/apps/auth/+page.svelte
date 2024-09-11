@@ -13,9 +13,8 @@
 	export let data;
 	const { throwError, showSuccess } = getContext("notify");
 	let users = data.users;
-	let persons = data.persons;
 	let services = data.services;
-	let usernames = data.usernames
+	let usernames = data.usernames;
 
 	// vars
 	let selected_user_id = "";
@@ -179,10 +178,20 @@
 							: `border-2 border-gray-500 rounded`} p-2 mb-2 pb-2 flex"
 					>
 						<div class=" w-56">
-							<h3 class=" font-medium">
-								{usernames[u["email"]]}
-							</h3>
-							<h4 class="ml-0.5 text-sm text-neutral-600">
+							{#if usernames[u["email"]]}
+								<h3 class=" font-medium">
+									{usernames[u["email"]]}
+								</h3>
+							{:else}
+								<h3 class=" font-medium text-red-400">
+									Usuário sem registro
+								</h3>
+								<p class="text-xs text-neutral-500">
+									Faça registro das informações no módulo de
+									cadastro de pessoas
+								</p>
+							{/if}
+							<h4 class="ml-0.5 mt-1 text-xs text-neutral-600">
 								{u["email"]}
 							</h4>
 						</div>
