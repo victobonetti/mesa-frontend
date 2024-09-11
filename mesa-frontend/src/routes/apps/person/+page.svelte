@@ -6,6 +6,8 @@
 	import NewPersonForm from "./components/NewPersonForm.svelte";
 	import { ServiceRequest } from "../../../services/serviceRequest";
 	import { handleResponse } from "../../../services/handleResponse";
+	import Button from "$lib/components/ui/button/button.svelte";
+	import Icon from "@iconify/svelte";
 
 	const { throwError, showSuccess } = getContext("notify");
 
@@ -156,25 +158,29 @@
 	};
 </script>
 
-<div class="w-screen h-screen p-12">
-	<div class="h-16 w-full flex justify-between items-center">
+<div>
+	<div class=" w-full flex justify-between items-center">
 		<div class="mb-4">
-			<h1 class=" select-none text-2xl mb-2">Pessoas cadastradas</h1>
+			<h2
+				class=" pb-2 text-2xl font-semibold tracking-tight transition-colors"
+			>
+				Pessoas cadastradas
+			</h2>
 			<p class=" select-none text-xs text-left text-neutral-600">
-				Crie pessoas. Clique nas tabela para visualizar individualmente
+				Crie pessoas. Clique nas tabelas para visualizar individualmente
 				e editar.
 			</p>
 		</div>
 		<div>
-			<a
-				class="cursor-pointer px-4 py-1 rounded-full bg-neutral-800 hover:bg-neutral-800 text-neutral-50"
+			<Button
 				on:click={() => {
 					windows["novaPessoa"].closed = false;
 					windows["novaPessoa"].minimized = false;
 				}}
 			>
-				+ Nova pessoa
-			</a>
+				<Icon class="text-lg mr-1 mt-0.5" icon="material-symbols:add" />
+				Nova pessoa
+			</Button>
 		</div>
 	</div>
 	<div class="w-full border-t pt-6 flex flex-wrap gap-4">

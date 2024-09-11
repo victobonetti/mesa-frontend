@@ -8,6 +8,8 @@
 	import { ServiceRequest } from "../../../services/serviceRequest";
 	import { getContext } from "svelte";
 	import { handleResponse } from "../../../services/handleResponse";
+    import { Button } from "$lib/components/ui/button";
+    import Icon from "@iconify/svelte";
 
 	// exports
 	export let data;
@@ -150,10 +152,10 @@
 	};
 </script>
 
-<div class="w-screen h-screen p-12">
+<div>
 	<div class="mb-4 flex">
 		<div class="w-1/2">
-			<h1 class=" select-none text-2xl mb-2">Usuários do domínio</h1>
+			<h1 class=" pb-2 text-2xl font-semibold tracking-tight transition-colors">Usuários do domínio</h1>
 			<p class=" select-none text-xs text-left text-neutral-600">
 				Gerencie usuários com acesso ao sistema; O email do registro irá
 				obter as informações cadastradas no módulo de cadastro de
@@ -161,10 +163,13 @@
 			</p>
 		</div>
 		<div class="w-1/2 h-12 flex justify-end items-end">
-			<button
+			<!-- material-symbols:add -->
+			<Button
 				on:click={() => (newUserWindowActive = true)}
-				class=" shadow-inner bg-neutral-800 hover:bg-neutral-800 text-neutral-100 rounded-full w-36 px-4 py-2"
-				>+ Novo usuário</button
+				> 
+				<Icon class="text-lg mr-1 mt-0.5" icon="material-symbols:add"/>
+				Novo usuário
+				</Button
 			>
 		</div>
 	</div>

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { goto } from "$app/navigation";
-	import { getExibitionName } from "../../services/exibitionNames.js";
+	import { getDescription, getExibitionName, getIcon } from "../../services/exibitionNames.js";
 	import * as Card from "$lib/components/ui/card";
 	import Icon from "@iconify/svelte";
 	export let data;
@@ -11,9 +11,9 @@
 	}
 </script>
 
-<div class="w-screen h-screen p-12">
+<div>
 	<h2
-		class="mt-10 scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight transition-colors first:mt-0"
+		class=" border-b pb-2 text-3xl font-semibold tracking-tight transition-colors"
 	>
 		Serviços disponíveis
 	</h2>
@@ -21,7 +21,7 @@
 		{#if services}
 			{#each services as s}
 				<Card.Root
-					class=" w-64 cursor-pointer hover:border-neutral-900"
+					class=" w-72 cursor-pointer hover:border-neutral-900"
 					on:click={() => goto(`/apps/${s["service_name"]}`)}
 				>
 					<Card.Header>
@@ -33,7 +33,7 @@
 									)}</Card.Title
 								>
 								<Card.Description
-									>{getExibitionName(
+									>{getDescription(
 										s["service_name"],
 									)}</Card.Description
 								>
@@ -41,7 +41,7 @@
 							<div class="w-1/4 flex items-center justify-center">
 								<Icon
 									class="ml-2 text-4xl"
-									icon="material-symbols:lock-person-outline"
+									icon={getIcon(s["service_name"])}
 								/>
 							</div>
 						</div>
