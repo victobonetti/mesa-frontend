@@ -15,7 +15,7 @@
 
 	// exports
 	export let data;
-	const { throwError, showSuccess } = getContext("notify");
+	const { throwError, showSuccess, showConfirm } = getContext("notify");
 	let users = data.users;
 	let services = data.services;
 	let usernames = data.usernames;
@@ -43,14 +43,6 @@
 			let usersErr = handleResponse(reqUsers, throwError);
 			if (!usersErr) {
 				users = reqUsers.result;
-			}
-
-			let reqPersons = await ServiceRequest.call(() =>
-				PersonService.findPersons(),
-			);
-			let personErr = handleResponse(reqPersons, throwError);
-			if (!personErr) {
-				persons = reqPersons;
 			}
 		}
 		email = "";
@@ -141,6 +133,13 @@
 		}
 	};
 
+	const triggerDeleteUser = (user_id: string) => {
+		console.log(user_id)
+		showConfirm("Essa ação irá excluir o usuário permanentemente.", () =>
+			deleteUser(user_id),
+		);
+	};
+
 	const deleteUser = async (user_id: string) => {
 		let result = await ServiceRequest.call(() =>
 			UserService.removeUser(user_id),
@@ -226,7 +225,9 @@
 												>
 												<DropdownMenu.Item
 													on:click={() =>
-														deleteUser(u["id"])}
+														triggerDeleteUser(
+															u["id"],
+														)}
 													class=" cursor-pointer text-red-500"
 													>Remover</DropdownMenu.Item
 												>

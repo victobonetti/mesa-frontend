@@ -1,6 +1,7 @@
 <script>
 	// @ts-nocheck
 
+	import { getContext } from "svelte";
 	import Input from "../../../../components/Input.svelte";
 	export let full_name = "";
 	export let cpf = "";
@@ -17,6 +18,14 @@
 	export let close;
 	export let create;
 	export let deletes;
+
+	const { showConfirm } = getContext("notify");
+
+	const triggerDeletes = () => {
+		showConfirm("Essa ação irá excluir a pessoa `" + full_name + "` permanentemente.", () =>
+			deletes(),
+		);
+	};
 </script>
 
 <div
@@ -86,7 +95,7 @@
 
 		{#if type == "update"}
 			<button
-				on:click={deletes}
+				on:click={triggerDeletes}
 				class=" mr-2 mb-3 rounded text-sm py-2 px-4 border border-red-400 shadow-inner bg-transparent text-red-400"
 				>Excluir</button
 			>
