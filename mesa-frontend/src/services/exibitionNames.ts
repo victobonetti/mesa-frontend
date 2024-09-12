@@ -1,9 +1,22 @@
+export const tocTrees = ["Segurança", "Cadastros", "Operacional"]
+
 export function getExibitionName(service_name:string) {
     switch(service_name){
         case "auth":
             return "Usuários"
         case "person":
             return "Pessoas"
+        default:
+            return service_name
+    }
+}
+
+export function getTocTree(service_name:string) {
+    switch(service_name){
+        case "auth":
+            return "Segurança"
+        case "person":
+            return "Cadastros"
         default:
             return service_name
     }
