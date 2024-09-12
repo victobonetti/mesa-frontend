@@ -8,6 +8,8 @@
 	import { handleResponse } from "../../../services/handleResponse";
 	import Button from "$lib/components/ui/button/button.svelte";
 	import Icon from "@iconify/svelte";
+    import DataTable from "./dataTable.svelte";
+
 
 	const { throwError, showSuccess } = getContext("notify");
 
@@ -115,17 +117,20 @@
 	};
 
 	const editPersonModalActive = (p: any) => {
+
+		let person = p["original"]
+
 		windows["editaPessoa"].closed = false;
-		edit_id = p.id;
-		edit_full_name = p.full_name;
-		edit_cpf = p.cpf;
-		edit_address = p.address.street;
-		edit_address_number = p.address.number;
-		edit_address_city = p.address.city;
-		edit_address_cep = p.address.cep;
-		edit_phone = p.phone;
-		edit_email = p.email;
-		edit_date_of_birth = p.date_of_birth;
+		edit_id = person.id;
+		edit_full_name = person.full_name;
+		edit_cpf = person.cpf;
+		edit_address = person.address.street;
+		edit_address_number = person.address.number;
+		edit_address_city = person.address.city;
+		edit_address_cep = person.address.cep;
+		edit_phone = person.phone;
+		edit_email = person.email;
+		edit_date_of_birth = person.date_of_birth;
 	};
 
 	const closeWindow = (windowName: string) => {
@@ -184,72 +189,14 @@
 		</div>
 	</div>
 	<div class="w-full border-t pt-6 flex flex-wrap gap-4">
-		<table class="min-w-full bg-white border border-gray-300">
-			<thead>
-				<tr>
-					<th
-						class="px-2 py-1 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-neutral-600 uppercase tracking-wider"
-						>Nome</th
-					>
-					<th
-						class="px-2 py-1 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-neutral-600 uppercase tracking-wider"
-						>CPF</th
-					>
-					<th
-						class="px-2 py-1 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-neutral-600 uppercase tracking-wider"
-						>Data Nasc</th
-					>
-					<th
-						class="px-2 py-1 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-neutral-600 uppercase tracking-wider"
-						>Email</th
-					>
-					<th
-						class="px-2 py-1 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-neutral-600 uppercase tracking-wider"
-						>Telefone</th
-					>
-					<th
-						class="px-2 py-1 border-b border-gray-200 bg-gray-100 text-left text-xs leading-4 font-medium text-neutral-600 uppercase tracking-wider"
-						>Endereço</th
-					>
-				</tr>
-			</thead>
-			<tbody class="bg-white">
-				{#if persons}
-					{#each persons as p}
-						<tr
-							on:click={() => editPersonModalActive(p)}
-							class="select-none bg-transparent hover:bg-transparent"
-						>
-							<td
-								class="px-2 text-xs py-1 border-b border-gray-200"
-								>{p.full_name}</td
-							>
-							<td
-								class="px-2 text-xs py-1 border-b border-gray-200"
-								>{p.cpf}</td
-							>
-							<td
-								class="px-2 text-xs py-1 border-b border-gray-200"
-								>{p.date_of_birth}</td
-							>
-							<td
-								class="px-2 text-xs py-1 border-b border-gray-200"
-								>{p.email}</td
-							>
-							<td
-								class="px-2 text-xs py-1 border-b border-gray-200"
-								>{p.phone}</td
-							>
-							<td
-								class="px-2 text-xs py-1 border-b border-gray-200"
-								>{p.address.street}, {p.address.number}, {p
-									.address.city}, {p.address.cep}</td
-							>
-						</tr>
-					{/each}
-				{/if}
-			</tbody>
-		</table>
+		<div class="rounded-md border w-full">
+			{#if persons}
+				<DataTable 
+					editPersonModalActive={editPersonModalActive}
+					persons={persons}
+				/>
+			{/if}
+		</div>
 	</div>
 </div>
 

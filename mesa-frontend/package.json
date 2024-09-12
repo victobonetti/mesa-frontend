@@ -32,6 +32,7 @@
 		"clsx": "^2.1.1",
 		"js-cookie": "^3.0.5",
 		"mesa-frontend": "file:",
+		"svelte-headless-table": "^0.18.2",
 		"svelte-radix": "^1.1.1",
 		"tailwind-merge": "^2.5.2",
 		"tailwind-variants": "^0.2.1"

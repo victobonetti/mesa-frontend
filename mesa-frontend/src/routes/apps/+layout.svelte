@@ -13,7 +13,7 @@
     {/if}
 </header>
 <main
-    class="bg-[url('$lib/assets/logo.png')] bg-no-repeat bg-[length:30%] bg-center px-12 pb-12 pt-16 h-screen w-screen"
+    class="bg-center px-12 pb-12 pt-16 h-screen w-screen"
 >
     <slot />
 </main>
