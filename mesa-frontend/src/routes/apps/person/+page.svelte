@@ -15,7 +15,7 @@
 
 	// exports
 	export let data;
-	let persons = data.persons;
+	let persons_pagination = data.persons_pagination;
 
 	// Active windows state
 	let windows = {
@@ -58,7 +58,7 @@
 		);
 		handleResponse(reqPersons, throwError);
 		closeWindow(refreshWindow);
-		persons = reqPersons.result;
+		persons_pagination = reqPersons.result;
 	};
 
 	const createPerson = async () => {
@@ -190,10 +190,10 @@
 	</div>
 	<div class="w-full border-t pt-6 flex flex-wrap gap-4">
 		<div class="rounded-md border w-full">
-			{#if persons}
+			{#if persons_pagination}
 				<DataTable 
 					editPersonModalActive={editPersonModalActive}
-					persons={persons}
+					persons={persons_pagination.persons}
 				/>
 			{/if}
 		</div>

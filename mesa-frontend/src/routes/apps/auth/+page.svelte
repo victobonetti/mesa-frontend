@@ -4,7 +4,6 @@
 	import { GrantsService } from "../../../services/auth/grantsService.js";
 	import { UserService } from "../../../services/auth/userService.js";
 	import { getExibitionName } from "../../../services/exibitionNames.js";
-	import { PersonService } from "../../../services/person/personService";
 	import { ServiceRequest } from "../../../services/serviceRequest";
 	import { getContext } from "svelte";
 	import { handleResponse } from "../../../services/handleResponse";
@@ -18,7 +17,6 @@
 	const { throwError, showSuccess, showConfirm } = getContext("notify");
 	let users = data.users;
 	let services = data.services;
-	let usernames = data.usernames;
 
 	// vars
 	let selected_user_id = "";
@@ -188,9 +186,9 @@
 					<Table.Body>
 						{#each users as u}
 							<Table.Row>
-								{#if usernames[u["email"]]}
+								{#if u["full_name"]}
 									<Table.Cell class="font-medium"
-										>{usernames[u["email"]]}</Table.Cell
+										>{u["full_name"]}</Table.Cell
 									>
 								{:else}
 									<Table.Cell class="text-red-500"

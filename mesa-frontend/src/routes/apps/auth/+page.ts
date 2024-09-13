@@ -7,35 +7,30 @@ import { ServiceRequest } from "../../../services/serviceRequest"
 export const load = async () => {
     let users = await ServiceRequest.call(() => UserService.findUsers())
     let services = await ServiceRequest.call(() => AppsService.findServices())
-
-    const findUserName = async (email: string) => {
-		let userName = undefined
-		let reqPerson = await ServiceRequest.call(() =>
-			PersonService.findPersonByEmail(email),
-		);
-		if (!reqPerson.err) {
-			let user = reqPerson.result;
-			console.log(user["full_name"]);
-			userName = user["full_name"];
-		}
-		return userName;
-	};
-
-    let usernames = {};
-    if(users.result){
-        for(let user of users.result) {
-            let email = user["email"]
-            let username = await findUserName(email)
-            usernames[email] = username
-        }
+    let emails = []
+    for(let u of users.result){
+        emails.push(u['email'])
     }
 
+    let person_data = await ServiceRequest.call(() => PersonService.findPersonByEmail(emails))
+    let formatted_users = []
+
+
+    console.log(person_data)
+    for (let user of users.result) {
+        user['full_name'] = null
+        for (let person of person_data.result.persons) {
+            if (person['email'] == user['email']) {
+                user['full_name'] = person['full_name']
+            }
+        }
+        formatted_users.push(user)
+    }
 
     return {
         services: services.result,
-        users: users.result,
+        users: formatted_users,
         tenantId: Cookies.get('tenantid'),
         token: Cookies.get('token'),
-        usernames
     }
 }
