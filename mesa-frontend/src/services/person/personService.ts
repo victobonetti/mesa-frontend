@@ -37,8 +37,14 @@ export class PersonService {
         return result.data
     }
 
-    static async findPersons(limit=2, page=1) {
-        let result = await axios.get(`${api_person}?limit=${limit}&page=${page}`, {
+    static async findPersons(limit=2, page=1, searchQuery="") {
+        let query = searchQuery
+        let req_url = `${api_person}?limit=${limit}&page=${page}`
+        if(query != ""){
+            req_url += `&search=${query}`
+        }
+
+        let result = await axios.get(req_url, {
             headers: {
                 'X-Tenant-ID': Cookies.get('tenantid'),
                 'Authorization': `Bearer ${Cookies.get('token')}`
@@ -48,6 +54,7 @@ export class PersonService {
     }
 
     static async findPersonByEmail(emails: string[]) {
+        
         let args = ""
         let count = 0
         for(let e of emails){

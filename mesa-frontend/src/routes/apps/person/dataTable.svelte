@@ -3,6 +3,7 @@
     import { writable } from "svelte/store";
     import { Label } from "$lib/components/ui/label/index.js";
     import { createTable, Render, Subscribe } from "svelte-headless-table";
+    import * as Select from "$lib/components/ui/select";
     import {
         addPagination,
         addSortBy,
@@ -16,6 +17,24 @@
 
     export let persons;
     export let editPersonModalActive;
+    export let actualPage: number;
+    export let lastPageIndex: number;
+    export let refreshFunction;
+    export let actualLimit: number;
+    export let searchQuery: string;
+
+    const limitOptions = [2, 5, 10, 20, 50, 100];
+
+    const nextPage = () => {
+        actualPage = actualPage + 1;
+        refreshFunction();
+    };
+
+    const lastPage = () => {
+        actualPage--;
+        refreshFunction();
+    };
+
     const tablepersons = writable(persons);
     $: $tablepersons = persons;
 
@@ -77,8 +96,6 @@
         flatColumns,
     } = table.createViewModel(columns);
 
-    const { hasNextPage, hasPreviousPage, pageIndex } = pluginStates.page;
-    const { filterValue } = pluginStates.filter;
     const { hiddenColumnIds } = pluginStates.hide;
 
     const ids = flatColumns.map((col) => col.id);
@@ -101,14 +118,20 @@
 
 <div class="flex items-center py-4">
     <div class="ml-4 w-1/2">
-        <Label class="mb-1" for="search">Pesquisar</Label>
-        <Input
-            id="search"
-            class="max-w-lg"
-            placeholder="Filtro de busca"
-            type="text"
-            bind:value={$filterValue}
-        />
+        <div class="flex">
+            <Input
+                id="search"
+                class="max-w-lg"
+                placeholder="Filtro de busca"
+                type="text"
+                bind:value={searchQuery}
+            />
+            <Button on:click={refreshFunction} variant="outline" class="ml-2 ">
+                <Icon class="mt-0.5 mr-2" icon="ion:search" />
+                Pesquisar
+                </Button
+            >
+        </div>
     </div>
     <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild let:builder>
@@ -169,7 +192,11 @@
         {#if $pageRows}
             {#each $pageRows as row (row.id)}
                 <Subscribe rowAttrs={row.attrs()} let:rowAttrs>
-                    <Table.Row on:click={() => editPersonModalActive(row)} class="cursor-pointer" {...rowAttrs}>
+                    <Table.Row
+                        on:click={() => editPersonModalActive(row)}
+                        class="cursor-pointer"
+                        {...rowAttrs}
+                    >
                         {#each row.cells as cell (cell.id)}
                             <Subscribe attrs={cell.attrs()} let:attrs>
                                 <Table.Cell {...attrs}>
@@ -183,17 +210,35 @@
         {/if}
     </Table.Body>
 </Table.Root>
-<div class="flex items-center justify-end space-x-4 py-4 px-2">
+<div class="flex items-end justify-end space-x-4 py-4 px-2">
+    <div>
+        <Label class="text-xs mb-1" for="limit">Items por página</Label>
+        <Select.Root
+            onSelectedChange={(v) => {
+                actualLimit = Number(v?.value);
+                refreshFunction();
+            }}
+        >
+            <Select.Trigger class="w-[96px]">
+                <Select.Value placeholder={String(actualLimit)} />
+            </Select.Trigger>
+            <Select.Content>
+                {#each limitOptions as l}
+                    <Select.Item value={l}>{l}</Select.Item>
+                {/each}
+            </Select.Content>
+        </Select.Root>
+    </div>
     <Button
         variant="outline"
         size="sm"
-        on:click={() => ($pageIndex = $pageIndex - 1)}
-        disabled={!$hasPreviousPage}>Anterior</Button
+        on:click={() => lastPage()}
+        disabled={actualPage <= 1 || lastPageIndex <= 1}>Anterior</Button
     >
     <Button
         variant="outline"
         size="sm"
-        disabled={!$hasNextPage}
-        on:click={() => ($pageIndex = $pageIndex + 1)}>Próxima</Button
+        disabled={actualPage >= lastPageIndex || lastPageIndex <= 1}
+        on:click={() => nextPage()}>Próxima</Button
     >
 </div>

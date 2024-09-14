@@ -4,11 +4,18 @@ import { UserService } from "../../../services/auth/userService"
 import { PersonService } from "../../../services/person/personService"
 import { AppsService } from "../../../services/auth/appsService"
 import { ServiceRequest } from "../../../services/serviceRequest"
+import { redirect } from "@sveltejs/kit"
 export const load = async () => {
+    console.log(Cookies.get('tenantid'))
     let users = await ServiceRequest.call(() => UserService.findUsers())
     let services = await ServiceRequest.call(() => AppsService.findServices())
     let emails = []
-    for(let u of users.result){
+
+    if(users.err || services.err){
+        redirect(302, '/apps')
+    }
+    
+    for (let u of users.result) {
         emails.push(u['email'])
     }
 
@@ -16,7 +23,6 @@ export const load = async () => {
     let formatted_users = []
 
 
-    console.log(person_data)
     for (let user of users.result) {
         user['full_name'] = null
         for (let person of person_data.result.persons) {

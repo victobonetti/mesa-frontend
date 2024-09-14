@@ -8,14 +8,21 @@
 	import { handleResponse } from "../../../services/handleResponse";
 	import Button from "$lib/components/ui/button/button.svelte";
 	import Icon from "@iconify/svelte";
-    import DataTable from "./dataTable.svelte";
-
+	import DataTable from "./dataTable.svelte";
 
 	const { throwError, showSuccess } = getContext("notify");
 
 	// exports
 	export let data;
 	let persons_pagination = data.persons_pagination;
+
+	// paginacao
+	let actualPage = 1;
+	let actualLimit = 2;
+	let personsCount = data.persons_pagination.total;
+	let lastPageIndex = data.persons_pagination.pages;
+
+	let searchQuery = ""
 
 	// Active windows state
 	let windows = {
@@ -52,13 +59,21 @@
 	let edit_email = "";
 	let edit_date_of_birth = "";
 
-	const refreshPersons = async (refreshWindow: string) => {
+	const refreshPersons = async (refreshWindow: string | null | undefined) => {
+		console.log(searchQuery)
 		let reqPersons = await ServiceRequest.call(() =>
-			PersonService.findPersons(),
+			PersonService.findPersons(actualLimit, actualPage, searchQuery),
 		);
 		handleResponse(reqPersons, throwError);
-		closeWindow(refreshWindow);
+		if (refreshWindow) closeWindow(refreshWindow);
 		persons_pagination = reqPersons.result;
+		personsCount = persons_pagination.total;
+		lastPageIndex = persons_pagination.pages;
+
+		if(actualPage > lastPageIndex){
+			actualPage = lastPageIndex
+			refreshPersons(null)
+		}
 	};
 
 	const createPerson = async () => {
@@ -117,8 +132,7 @@
 	};
 
 	const editPersonModalActive = (p: any) => {
-
-		let person = p["original"]
+		let person = p["original"];
 
 		windows["editaPessoa"].closed = false;
 		edit_id = person.id;
@@ -191,10 +205,21 @@
 	<div class="w-full border-t pt-6 flex flex-wrap gap-4">
 		<div class="rounded-md border w-full">
 			{#if persons_pagination}
-				<DataTable 
-					editPersonModalActive={editPersonModalActive}
+				<DataTable
+					{editPersonModalActive}
 					persons={persons_pagination.persons}
+					bind:actualPage
+					bind:lastPageIndex
+					bind:actualLimit
+					bind:searchQuery
+					refreshFunction={() => refreshPersons(null)}
 				/>
+				<div class="p-2 border-t rounded-full w-full select-none flex flex-col items-center justify-center">
+					<p>Página {actualPage} de {lastPageIndex}</p>
+					<p class="text-xs text-neutral-600">
+						{personsCount} pessoas encontradas
+					</p>
+				</div>
 			{/if}
 		</div>
 	</div>
