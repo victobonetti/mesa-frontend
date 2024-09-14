@@ -60,7 +60,6 @@
 	let edit_date_of_birth = "";
 
 	const refreshPersons = async (refreshWindow: string | null | undefined) => {
-		console.log(searchQuery)
 		let reqPersons = await ServiceRequest.call(() =>
 			PersonService.findPersons(actualLimit, actualPage, searchQuery),
 		);

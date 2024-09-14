@@ -58,7 +58,6 @@ export class PersonService {
         let args = ""
         let count = 0
         for(let e of emails){
-            if(emails.length - 1 == count)
             args += `email=${e}&`
             count++
         }

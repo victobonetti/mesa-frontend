@@ -5,7 +5,6 @@ import { ServiceRequest } from "../../../services/serviceRequest"
 import { redirect } from "@sveltejs/kit"
 export const load = async () => {
     let persons = await ServiceRequest.call(() => PersonService.findPersons())
-    console.log(persons)
 
     if(persons.err){
         redirect(302, '/apps')

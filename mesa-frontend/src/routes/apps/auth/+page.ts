@@ -6,7 +6,6 @@ import { AppsService } from "../../../services/auth/appsService"
 import { ServiceRequest } from "../../../services/serviceRequest"
 import { redirect } from "@sveltejs/kit"
 export const load = async () => {
-    console.log(Cookies.get('tenantid'))
     let users = await ServiceRequest.call(() => UserService.findUsers())
     let services = await ServiceRequest.call(() => AppsService.findServices())
     let emails = []

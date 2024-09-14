@@ -132,7 +132,6 @@
 	};
 
 	const triggerDeleteUser = (user_id: string) => {
-		console.log(user_id)
 		showConfirm("Essa ação irá excluir o usuário permanentemente.", () =>
 			deleteUser(user_id),
 		);
