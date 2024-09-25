@@ -6,19 +6,16 @@
   const routes = [
     [
       "Produtos",
-      "Cadastro de produtos e fiscal",
       "products-registry",
       "uil:food",
     ],
     [
       "Insumos",
-      "Cadastro de insumos",
       "ingredients-registry",
       "fluent:food-carrot-24-regular",
     ],
     [
       "Ficha técnica",
-      "Criação de ficha técnica e elaboração de preços",
       "ficha-tecnica",
       "raphael:paper",
     ],
@@ -40,7 +37,7 @@
   </div>
 
   <div class="w-full border-t pt-6 p-2 flex gap-6">
-    {#each routes as [title, description, route, icon]}
+    {#each routes as [title, route, icon]}
       <div on:click={() => handleCardClick(route)} class=" shadow cursor-pointer hover:border-black h-32 border flex items-center p-4 rounded-xl">
         <div class="select-none cursor-pointer ">
           <p class="w-32 text-2xl ">{title}</p>
