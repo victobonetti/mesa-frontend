@@ -68,7 +68,7 @@
 		<Input id="address_number" label="Número" bind:val={address_number} />
 		<Input id="address_city" label="Cidade" bind:val={address_city} />
 		<Input id="address_cep" label="CEP" bind:val={address_cep} />
-		<Input id="phone" label="Telefone" bind:val={phone} />
+		<Input id="phone" is_mandatory={true} label="Telefone" bind:val={phone} />
 		<div class="mb-4">
 			<label
 				for="email"
