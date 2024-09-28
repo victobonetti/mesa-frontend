@@ -62,13 +62,13 @@
 		</div>
 
 		{#if type == "update"}{/if}
-		<Input id="full_name" is_mandatory={true} label="Nome" bind:val={full_name} />
-		<Input id="cpf" label="CPF" bind:val={cpf} />
-		<Input id="address" label="Endereço" bind:val={address} />
-		<Input id="address_number" label="Número" bind:val={address_number} />
+		<Input minlen={12} maxlen={32} id="full_name" is_mandatory={true} label="Nome" bind:val={full_name} />
+		<Input maxlen={11} id="cpf" label="CPF" bind:val={cpf} />
+		<Input maxlen={48} id="address" label="Endereço" bind:val={address} />
+		<Input maxlen={8} id="address_number" label="Número" bind:val={address_number} />
 		<Input id="address_city" label="Cidade" bind:val={address_city} />
-		<Input id="address_cep" label="CEP" bind:val={address_cep} />
-		<Input id="phone" is_mandatory={true} label="Telefone" bind:val={phone} />
+		<Input maxlen={8} id="address_cep" label="CEP" bind:val={address_cep} />
+		<Input maxlen={11} id="phone" is_mandatory={true} label="Telefone" bind:val={phone} />
 		<div class="mb-4">
 			<label
 				for="email"

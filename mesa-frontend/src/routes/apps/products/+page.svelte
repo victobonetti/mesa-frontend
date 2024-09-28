@@ -19,6 +19,11 @@
       "ficha-tecnica",
       "raphael:paper",
     ],
+    [
+      "Categorias",
+      "categories",
+      "material-symbols:category-outline-rounded",
+    ],
   ];
 
   function handleCardClick(route: string) {

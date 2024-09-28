@@ -43,7 +43,7 @@
 				class="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-xs"
 			/>
 		</div>
-		<Input id="pass" label="Senha" is_mandatory={true} bind:val={pass} />
+		<Input id="pass" label="Senha" minlen={8} maxlen={12} is_mandatory={true} bind:val={pass} />
 		<div class="mb-4 flex items-center">
 			<label
 				for="email"
