@@ -75,7 +75,7 @@
       type={"number"}
       label="Código de busca"
       bind:val={search_code}
-      maxlen={4}
+      maxlen={9999}
     />
     <label for="category" class="flex text-xs font-medium text-neutral-700"
       >Categoria
@@ -87,6 +87,7 @@
       bind:value={category_id}
       name="category"
       id="category"
+      maxlen={9999}
     >
       {#each categories as c}
         <option value={c.id}>{c.name}</option>
@@ -103,8 +104,8 @@
     <h1 class="w-1/2 mb-2 border-b select-none font-thin text-neutral-500 min-w-96">
       Fiscal
     </h1>
-    <Input id="NCM" label="NCM" is_mandatory={true} bind:val={NCM} />
-    <Input id="CFOP" label="CFOP" is_mandatory={true} bind:val={CFOP} />
+    <Input id="NCM" label="NCM (xxxx.xx.xx)" is_mandatory={true} bind:val={NCM} />
+    <Input id="CFOP" label="CFOP" maxlen={4} is_mandatory={true} bind:val={CFOP} />
   </div>
   <div class="w-full flex justify-end pr-4">
     {#if type == "create"}

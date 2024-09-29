@@ -32,8 +32,8 @@
         type=number
         {id}
         bind:value={val}
-        minlength={minlen}
-        maxlength={maxlen}
+        min={minlen}
+        max={maxlen}
         class="mt-1 block w-full px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-slate-500 focus:border-slate-500 sm:text-xs"
     />
     {/if}
