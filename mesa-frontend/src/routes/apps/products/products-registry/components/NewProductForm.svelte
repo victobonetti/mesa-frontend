@@ -17,6 +17,7 @@
   export let close;
   export let create;
   export let deletes;
+  export let onChangeCategory;
 
   const { showConfirm } = getContext("notify");
 
@@ -85,6 +86,7 @@
     <select
       class="text-xs py-1 text-neutral-600 mb-3 w-full border rounded border-neutral-300"
       bind:value={category_id}
+      on:change={onChangeCategory}
       name="category"
       id="category"
       maxlen={9999}

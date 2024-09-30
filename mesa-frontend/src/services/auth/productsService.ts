@@ -98,11 +98,15 @@ export class ProductsService {
         return result.data
     }
 
-    static async editCategory(id: string, name: string) {
+    static async editCategory(id: string, name: string, default_cfop:string, default_ncm:string, is_composed: boolean, max_compose_size:number) {
         let result = await axios.put(`${api_products}/categories`,
             {
                 category_id: id,
-                name: name
+                name: name,
+                default_cfop: default_cfop,
+                default_ncm: default_ncm,
+                is_composed: Boolean(is_composed),
+                max_compose_size: max_compose_size
             }, {
             headers: {
                 'X-Tenant-ID': Cookies.get('tenantid'),

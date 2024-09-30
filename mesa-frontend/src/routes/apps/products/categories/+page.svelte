@@ -17,9 +17,29 @@
   let selected_category_name = "";
   let selected_category_id = "";
   let edit_name = "";
+  let edit_default_cfop = "";
+  let edit_default_ncm = "";
+  let edit_is_composed = false;
+  let edit_max_compose_size = 1;
+
+  function increment() {
+    if (edit_max_compose_size < 8) {
+      edit_max_compose_size += 1;
+    }
+  }
+
+  function decrement() {
+    if (edit_max_compose_size > 1) {
+      edit_max_compose_size -= 1;
+    }
+  }
 
   const viewCategory = (category: any) => {
     selected_category_name = category.name;
+    edit_default_cfop = category.default_cfop;
+    edit_default_ncm = category.default_ncm;
+    edit_is_composed = category.is_composed;
+    edit_max_compose_size = category.max_compose_size;
     edit_name = category.name;
     selected_category_id = category.id;
     confirmActive = true;
@@ -51,14 +71,21 @@
   const editCategory = async () => {
     console.log(selected_category_name != edit_name);
 
-    if (selected_category_name != edit_name) {
-      let result = await ServiceRequest.call(() =>
-        ProductsService.editCategory(selected_category_id, edit_name)
-      );
-      handleResponse(result, throwError);
-      if (!result.err) {
-        categories = await ProductsService.findCategories();
-      }
+    console.log(edit_is_composed)
+
+    let result = await ServiceRequest.call(() =>
+      ProductsService.editCategory(
+        selected_category_id,
+        edit_name,
+        edit_default_cfop,
+        edit_default_ncm,
+        edit_is_composed,
+        edit_max_compose_size
+      )
+    );
+    handleResponse(result, throwError);
+    if (!result.err) {
+      categories = await ProductsService.findCategories();
     }
   };
 </script>
@@ -76,10 +103,36 @@
             label="Nome da categoria"
             bind:val={edit_name}
           />
-          <div class="flex">
-            <input type="checkbox" />
-            <p class="ml-2 select-none">Produto composto (permite meio-a-meio)</p>
+          <Input
+            id="default_ncm"
+            maxlen={10}
+            label="NCM padrão (xxxx.xx.xx)"
+            bind:val={edit_default_ncm}
+          />
+          <Input
+            id="default_cfop"
+            maxlen={4}
+            label="CFOP padrão (xxxx)"
+            bind:val={edit_default_cfop}
+          />
+          <div class="flex mb-6">
+            <input checked={edit_is_composed} bind:value={edit_is_composed} type="checkbox" />
+            <p class="ml-2 select-none">
+              Produto composto (permite meio-a-meio)
+            </p>
           </div>
+          {#if edit_is_composed}
+            <div class="p-4 border-t">
+              <p class="ml-4 select-none">Máximo número de metades</p>
+              <div
+                class="flex mt-2 ml-4 items-center justify-evenly bg-neutral-200 rounded-full w-32"
+              >
+                <button class="mb-1 text-2xl" on:click={decrement}>-</button>
+                <div class="text-xl font-semibold">{edit_max_compose_size}</div>
+                <button class="mb-1 text-2xl" on:click={increment}>+</button>
+              </div>
+            </div>
+          {/if}
         </AlertDialog.Description>
       </AlertDialog.Header>
       <AlertDialog.Footer>

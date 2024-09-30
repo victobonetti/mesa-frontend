@@ -114,7 +114,7 @@
 <div class="flex items-center py-4">
   <div class="ml-4 w-1/2">
     <div class="flex">
-      <!-- <Input
+      <Input
         id="search"
         class="max-w-lg"
         placeholder="Filtro de busca"
@@ -124,7 +124,7 @@
       <Button on:click={refreshFunction} variant="outline" class="ml-2 ">
         <Icon class="mt-0.5 mr-2" icon="ion:search" />
         Pesquisar
-      </Button> -->
+      </Button>
     </div>
   </div>
   <DropdownMenu.Root>

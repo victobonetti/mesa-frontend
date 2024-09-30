@@ -2,7 +2,7 @@
   import { getContext, onMount } from "svelte";
   import Button from "$lib/components/ui/button/button.svelte";
   import Icon from "@iconify/svelte";
-  import DataTable from "./dataTable.svelte"
+  import DataTable from "./dataTable.svelte";
   import { ProductsService } from "../../../../services/auth/productsService";
   import { handleResponse } from "../../../../services/handleResponse";
   import { ServiceRequest } from "../../../../services/serviceRequest";
@@ -15,9 +15,9 @@
   // exports
   export let data;
   let products_pagination = data.products_pagination;
-  let categories = data.categories
+  let categories = data.categories;
 
-  console.log(categories)
+  console.log(categories);
 
   // paginacao
   let actualPage = 1;
@@ -57,6 +57,24 @@
   let edit_NCM: string = "";
   let edit_CFOP: string = "";
   let edit_vProd = 0;
+
+  const getCategoryDefaultInfoCreate = () => {
+    for (let c of categories) {
+      if (c.id == category_id) {
+        NCM = c.default_ncm;
+        CFOP = c.default_cfop;
+      }
+    }
+  };
+
+  const getCategoryDefaultInfoEdit = () => {
+    for (let c of categories) {
+      if (c.id == edit_category_id) {
+        edit_NCM = c.default_ncm;
+        edit_CFOP = c.default_cfop;
+      }
+    }
+  };
 
   const refreshproducts = async (refreshWindow: string | null | undefined) => {
     let reqproducts = await ServiceRequest.call(() =>
@@ -193,7 +211,7 @@
         <DataTable
           {editproductModalActive}
           products={products_pagination.products}
-          categories={categories}
+          {categories}
           bind:actualPage
           bind:lastPageIndex
           bind:actualLimit
@@ -241,7 +259,8 @@
       bind:NCM
       bind:CFOP
       bind:vProd
-      categories={categories}
+      {categories}
+      onChangeCategory={getCategoryDefaultInfoCreate}
       minimize={() => (windows["novaProduto"].minimized = true)}
       close={() => closeWindow("novaProduto")}
       type="create"
@@ -259,7 +278,8 @@
       bind:NCM={edit_NCM}
       bind:CFOP={edit_CFOP}
       bind:vProd={edit_vProd}
-      categories={categories}
+      onChangeCategory={getCategoryDefaultInfoEdit}
+      {categories}
       minimize={() => (windows["editaProduto"].minimized = true)}
       close={() => closeWindow("editaProduto")}
       type="update"
