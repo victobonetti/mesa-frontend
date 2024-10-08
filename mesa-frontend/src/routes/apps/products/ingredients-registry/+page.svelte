@@ -11,8 +11,9 @@
   let editActive = false;
   let isPropsVisible = false;
 
-  let editVal = "";
-  let editQtd = "";
+  let editVal = ["", ""];
+  let editQtd = ["", ""];
+  let editUnit = "un";
 
   function capitalize(str: string) {
     if (!str) return "";
@@ -29,7 +30,7 @@
   }
 
   function setPropsVisible(): void {
-    isPropsVisible = true;
+    isPropsVisible = !isPropsVisible;
   }
 </script>
 
@@ -58,12 +59,16 @@
           >
             <Table.Cell>{capitalize(i.name)} ({capitalize(i.unit)})</Table.Cell>
             <Table.Cell>
-              {#each Object.keys(i.value) as key}
-                <div class="flex select-none">
-                  <p class=" font-mono w-16">R${i.value[key].toFixed(2)}</p>
-                  <p>({capitalize(key)})</p>
-                </div>
-              {/each}
+              {#if typeof i.value === "object"}
+                {#each Object.keys(i.value) as key}
+                  <div class="flex select-none">
+                    <p class=" font-mono w-16">R${i.value[key].toFixed(2)}</p>
+                    <p>({capitalize(key)})</p>
+                  </div>
+                {/each}
+              {:else}
+                <p class=" font-mono">R${i.value.toFixed(2)} (un)</p>
+              {/if}
             </Table.Cell>
             {#if i.children_ingredients}
               <Table.Cell>
@@ -108,7 +113,7 @@
               : `R$${Number(selected_ingredient.value).toFixed(2)}`}
           </p>
         </div>
-        <div class="border-t flex p-4">
+        <div class="border-t flex flex-col p-4">
           {#if selected_ingredient.children_ingredients && selected_ingredient.children_ingredients.length > 0}
             <div class="w-full">
               <h4 class="font-semibold text-lg">Composição:</h4>
@@ -146,25 +151,87 @@
             </div>
           {:else}
             {#if isPropsVisible}
-              <div>
-                <select name="units" id="">
+              <div class="flex flex-col">
+                <select
+                  class="w-32 text-lg border mb-4"
+                  bind:value={editUnit}
+                  name="units"
+                  id=""
+                >
                   <option value="l">L / ml</option>
                   <option value="g">Kg / g</option>
-                  <option value="un">Unidade</option>
+                  <option selected value="un">Un</option>
                 </select>
-                // TODO logica pra variar inputs de acordo com o valor do select
-                <Input
-                  id={"val"}
-                  label={"Valor"}
-                  type={"number"}
-                  val={editVal}
-                />
-                <Input
-                  id={"qtd"}
-                  label={"Quantidade"}
-                  type={"number"}
-                  val={editQtd}
-                />
+                <div>
+                  {#if editUnit == "l"}
+                    <Input
+                      id={"val"}
+                      label={"Valor"}
+                      type={"number"}
+                      val={editVal}
+                    />
+                    <Input
+                      id={"qtd"}
+                      label={"Quantidade"}
+                      type={"number"}
+                      val={editQtd}
+                    />
+                    <Input
+                      id={"val"}
+                      label={"Valor"}
+                      type={"number"}
+                      val={editVal}
+                    />
+                    <Input
+                      id={"qtd"}
+                      label={"Quantidade"}
+                      type={"number"}
+                      val={editQtd}
+                    />
+                  {/if}
+
+                  {#if editUnit == "g"}
+                    <Input
+                      id={"val"}
+                      label={"Valor"}
+                      type={"number"}
+                      val={editVal}
+                    />
+                    <Input
+                      id={"qtd"}
+                      label={"Quantidade"}
+                      type={"number"}
+                      val={editQtd}
+                    />
+                    <Input
+                      id={"val"}
+                      label={"Valor"}
+                      type={"number"}
+                      val={editVal}
+                    />
+                    <Input
+                      id={"qtd"}
+                      label={"Quantidade"}
+                      type={"number"}
+                      val={editQtd}
+                    />
+                  {/if}
+
+                  {#if editUnit == "un"}
+                    <Input
+                      id={"val"}
+                      label={"Valor"}
+                      type={"number"}
+                      val={editVal}
+                    />
+                    <Input
+                      id={"qtd"}
+                      label={"Quantidade"}
+                      type={"number"}
+                      val={editQtd}
+                    />
+                  {/if}
+                </div>
               </div>
             {/if}
             <div class="gap-4">
@@ -175,7 +242,7 @@
                 Adicionar composição
               </Button>
               <Button
-                class="bg-green-500 hover:bg-yellow-50 border border-green-500 hover:text-green-500 text-green-900"
+                class={`${isPropsVisible ? " bg-green-50 text-green-500 " : " bg-green-500 text-green-900 "}  hover:bg-green-50 border border-green-500 hover:text-green-500 `}
                 variant="default"
                 on:click={setPropsVisible}
               >
